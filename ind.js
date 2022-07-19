@@ -8,7 +8,7 @@ $(".pt_retrieval").html("\
     <h3>dataset:</h3><p id=\"dataset\"></p>\
     <h3>variant:</h3><p id=\"variant\"></p>\
     <h2>output table</h2>\
-    <table id=\"retrieval_output_table\">BIGCHANGE</table>\
+    <table id=\"retrieval_output_table\"></table>\
 ");
 
 // var url = "http://127.0.0.1:8000/pyterrier/retrieval/BM25/vaswani/terrier_stemmed/%5B%5B%22q0%22%2C%22special%22%5D%2C%5B%22q1%22%2C%22cats%22%5D%5D?cols=%5B%22qid%22%2C%22query%22%5D&limit=10";
