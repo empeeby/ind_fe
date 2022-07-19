@@ -1,7 +1,7 @@
 // const jquery360 = require("./jquery-3.6.0");
 
 $(".pt_retrieval").html("\
-    <h2>input table</h2>\
+    <h2>input table CHANGE</h2>\
     <table id=\"retrieval_input_table\"></table>\
     <h2>parameters</h2>\
     <h3>wmodel:</h3><p id=\"wmodel\"></p>\
