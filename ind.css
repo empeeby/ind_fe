@@ -1,0 +1,20 @@
+.green {
+    color: rgb(37, 255, 37);
+}
+
+table, th, td {
+    /* border: 1px solid; */
+    border-collapse: collapse;
+  }
+
+table {
+    display: block;
+    max-height: 250px;
+    max-width: 400px;
+    overflow-x:auto;
+    overflow-y:auto;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
