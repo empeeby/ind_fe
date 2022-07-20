@@ -18,13 +18,7 @@ class Table {
         this.columns = columns;
         this.data = data;
     }
-
-
 }
-
-$(".pt_retrieval").each(function(){
-    $('h2', this).append($(this).data('slug'));
-})
 
 var inputTable = new Table(['qid','query'],[['1','chemical'],['2','cats']]);
 $('#retrieval_input_table').html(buildtable(inputTable));
