@@ -53,10 +53,19 @@ inputTableEventListeners.push(deleteInputRowListener);
 
 function tableEditListener() {
     $('.editable').on('keypress', function(e) {
-
+        // if user presses enter when editing
         if (e.which == 13) {
-            this.blur();
-            return false;
+            // clear any text selection/highlight
+            var sel = window.getSelection ? window.getSelection() : document.selection;
+            if (sel) {
+                if (sel.removeAllRanges) {
+                    sel.removeAllRanges();
+                } else if (sel.empty) {
+                    sel.empty();
+                }
+            }
+            this.blur(); // remove focus
+            return false; // do not input new line
         }
     })
 }

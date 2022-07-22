@@ -22,7 +22,7 @@ class PtRetrieval extends BaseModel {
     view;
 
     defaultColumns = ['qid','query'];
-    defaultData = [['4','chemical'],['1','cats']];
+    defaultData = [['0','chemical'],['1','cats']];
     defaultNewQuery = '';
 
     constructor(containerDiv) {
