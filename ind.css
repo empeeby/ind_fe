@@ -9,7 +9,7 @@ table, th, td {
 
 table {
     display: block;
-    max-height: 250px;
+    max-height: 300px;
     max-width: 400px;
     overflow-x:auto;
     overflow-y:auto;

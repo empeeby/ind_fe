@@ -10,6 +10,7 @@ var templates ={
     <h4>wmodel:</h3><p class=\"wmodel\"></p>\
     <h4>dataset:</h4><p class=\"dataset\"></p>\
     <h4>variant:</h4><p class=\"variant\"></p>\
+    <button class=\'submit-button\'>submit</button>\
     <h3>output table</h3>\
     <table class=\'output_table\'></table>\
     '

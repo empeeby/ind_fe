@@ -4,6 +4,12 @@ class Table {
         this.data = data;
     }
 
+    updateCell(rowIndex, colIndex, value) {
+        // maybe check input is within bounds...
+        this.data[rowIndex][colIndex] = value;
+        console.log(this);
+    }
+
     pushRow(newRow) {
         this.data.push(newRow);
     }
@@ -17,6 +23,10 @@ class Table {
         this.data = data;
     }
 }
+
+// class EditableTableView {
+//     constructor(table, )
+// }
 
 function postjson(url, data, success, context) {
     var request = $.ajax({
