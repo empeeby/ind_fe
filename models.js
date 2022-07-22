@@ -22,7 +22,8 @@ class PtRetrieval extends BaseModel {
     view;
 
     defaultColumns = ['qid','query'];
-    defaultData = [['1','chemical'],['2','cats']];
+    defaultData = [['4','chemical'],['1','cats']];
+    defaultNewQuery = '';
 
     constructor(containerDiv) {
         super();
@@ -40,7 +41,7 @@ class PtRetrieval extends BaseModel {
             this.buildUrl(),
             JSON.stringify(this.inputTable),
             function(results){
-                console.log('success');
+                // console.log('successful post');
                 this.outputTable.resetContents(results.columns, results.data);
                 this.view.updateOutputTable();
             },
@@ -50,5 +51,31 @@ class PtRetrieval extends BaseModel {
 
     buildUrl() {
         return API_BASE_URL + this.slug + this.wmodel + '/' + this.dataset + '/' + this.variant + '/';
+    }
+
+    addInputRow() {
+        this.inputTable.pushRow([this.getNextQID(),this.defaultNewQuery])
+        console.log(this.inputTable.data);
+        this.view.updateInputTable();
+        this.requestOutputTable();
+    }
+
+    deleteInputRow(index) {
+        this.inputTable.removeRow(index);
+        console.log(this.inputTable.data);
+        this.view.updateInputTable();
+        this.requestOutputTable();
+    }
+
+    getNextQID(){
+        // get all existing QIDs
+        var existingQIDs = [];
+        for (i=0; i<this.inputTable.data.length; i++) {
+            existingQIDs.push(parseInt(this.inputTable.data[i][0]))
+        }
+        // start at 0 and keep incrementing until the number is not taken
+        var candidate = 0;
+        while (existingQIDs.includes(candidate)) candidate++;
+        return candidate.toString();;
     }
 }

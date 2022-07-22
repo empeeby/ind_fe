@@ -55,27 +55,20 @@ class PtRetrievalView extends BaseView {
         var outTab =  $(this.containerDiv)
             .find('.output_table')
                 .html(tableToHTML(this.model.outputTable));
-    }
-
-    updateInputTable() {
-        var inTab =  $(this.containerDiv).find('.input_table');
-        inTab.html(tableToHTML(this.model.inputTable, ['query']));
-
-        // $(inTab).find('td').each(function(){
-        //     $(this).bind('input', function(e){
-        //         console.log(e.target)
-        //         var rowNum = $(e.target.parentElement).data('rownum');
-        //         var colNum = $(e.target).data('colnum');
-        //         var content = e.target.firstChild.textContent;
-        //         var parentIndDiv = demos[$(this).parents('div.in_d').data('uid')];
-        //         parentIndDiv.inputTable.updateCell(rowNum, colNum, content);
-        //     });
-        // })
-    }
+            }
+            
+            updateInputTable() {
+                var inTab =  $(this.containerDiv).find('.input_table');
+                inTab.html(tableToHTML(this.model.inputTable, ['query']));
+                // inputTableListener();
+                // deleteInputRowListener();
+                updateInputTableEventListeners();
+            }
+            
+            focusLastRow() {
+                $(this.containerDiv).find('.input_table').find('td.editable').last().focus();
+            }
    
-    // drawView() {
-    //     $(this.containerDiv).html(tableToHTML(this.model.inputTable));
-    // }
 }
 
 function tableToHTML(table, editableFields) {
@@ -121,11 +114,14 @@ function buildrows(in_rows, editableColumns) {
         for (col=0; col < in_rows[row].length; col++) {
             outstring += '<td data-colnum=' + col;
             if (editableColumns.includes(col)) {
-                outstring += ' contenteditable=\"true\"';
+                outstring += ' contenteditable=\"true\" class=\"editable\"';
             }
             outstring += '>' + in_rows[row][col] + '</td>';
         }
+        if (editableColumns.length > 0) outstring += '<td><button class=\"del-input-row-button\">del</button></td>';
+        // outstring += '<td><button class=\"del-input-row-button\">del</button></td>';
         outstring += '</tr>';
     }
     return outstring;
 }
+

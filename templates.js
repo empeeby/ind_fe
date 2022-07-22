@@ -5,7 +5,9 @@ var templates ={
     ptRetrieval: '\
     <h2 class=\'title\'></h2>\
     <h3>input table</h3>\
-    <table class=\'input_table\'></table>\
+    <table class=\'input_table\'>\
+    </table>\
+    <button class=\'add-input-row-button\'>add row</button>\
     <h3>parameters</h3>\
     <h4>wmodel:</h3><p class=\"wmodel\"></p>\
     <h4>dataset:</h4><p class=\"dataset\"></p>\

@@ -15,3 +15,18 @@ $('div.in_d').each(function(){
     }
     
 });
+
+// used by events to access the parent demo object for a given DOM element
+function getParentDemoModel(elem) {
+    return demos[$(elem).parents('div.in_d').data('uid')];
+}
+
+function getParentView(elem) {
+    return demos[$(elem).parents('div.in_d').data('uid')].view;
+}
+
+// for (var listener in eventListeners) {
+//     listener.call();
+// }
+
+callEventListeners();
