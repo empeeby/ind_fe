@@ -60,9 +60,10 @@ class PtRetrievalView extends BaseView {
             updateInputTable() {
                 var inTab =  $(this.containerDiv).find('.input_table');
                 inTab.html(tableToHTML(this.model.inputTable, ['query']));
-                // inputTableListener();
-                // deleteInputRowListener();
-                updateInputTableEventListeners();
+                
+                // These are called elsewhere when the page inits
+                // but they need to be reset after changes
+                if (pageInitialised) updateInputTableEventListeners();
             }
             
             focusLastRow() {

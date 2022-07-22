@@ -4,9 +4,6 @@ var inputTableEventListeners = []
 // just for testing - actual demos will update automatically
 function submitListener() {
     $('.submit-button').click(function(){
-        // var parentInDDiv = demos[$(this).parents('div.in_d').data('uid')];
-        // var parentInDDiv = getParentInDDiv(this);
-        // console.log('submit click: ' + parentInDDiv.uid);
         getParentDemoModel(this).requestOutputTable();
     });
 }
@@ -15,6 +12,7 @@ eventListeners.push(submitListener);
 
 // input table updates
 function inputTableListener() {
+    // console.log('inputTableListener');
     $('.input_table').find('td.editable').each(function(){
         $(this).bind('input', function(e){
             // console.log(e.target)
@@ -33,6 +31,7 @@ inputTableEventListeners.push(inputTableListener);
 
 // add row to input table
 function addInputRowListener() {
+    // console.log('addInputRowListener');
     $('.add-input-row-button').click(function(){
         getParentDemoModel(this).addInputRow();
         getParentView(this).focusLastRow();
@@ -42,6 +41,7 @@ function addInputRowListener() {
 eventListeners.push(addInputRowListener);
 
 function deleteInputRowListener() {
+    // console.log('deleteInputRowListener')
     $('.del-input-row-button').click(function(){
         var rowNum = $(this).closest('tr').data('rownum');
         // var rowNum = $(e.target.parentElement).data('rownum');
@@ -52,6 +52,7 @@ eventListeners.push(deleteInputRowListener);
 inputTableEventListeners.push(deleteInputRowListener);
 
 function tableEditListener() {
+    // console.log('tableEditListener');
     $('.editable').on('keypress', function(e) {
         // if user presses enter when editing
         if (e.which == 13) {
@@ -81,6 +82,7 @@ function callEventListeners() {
 }
 
 function updateInputTableEventListeners() {
+    // console.log('updateInputTableEventListeners');
     for (i=0; i<inputTableEventListeners.length; i++) {
         inputTableEventListeners[i]();
     }
