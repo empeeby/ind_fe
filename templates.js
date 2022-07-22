@@ -8,10 +8,27 @@ var templates ={
     <table class=\'input_table\'>\
     </table>\
     <button class=\'add-input-row-button\'>add row</button>\
-    <h3>parameters</h3>\
-    <h4>wmodel:</h3><p class=\"wmodel\"></p>\
-    <h4>dataset:</h4><p class=\"dataset\"></p>\
-    <h4>variant:</h4><p class=\"variant\"></p>\
+    <div class=\"params\">\
+        <h3>parameters</h3>\
+        \
+        <div class=\"wmodel-wrap">\
+            <h4>wmodel:</h4>\
+            <div class=\"wmodel\">\
+            </div>\
+        </div>\
+        \
+        <div class=\"dataset-wrap">\
+            <h4>dataset:</h4>\
+            <div class=\"dataset\">\
+            </div>\
+        </div>\
+        \
+        <div class=\"variant-wrap">\
+            <h4>variant:</h4>\
+            <div class=\"variant\">\
+            </div>\
+        </div>\
+    </div>\
     <button class=\'submit-button\'>submit</button>\
     <h3>output table</h3>\
     <table class=\'output_table\'></table>\

@@ -74,6 +74,35 @@ eventListeners.push(tableEditListener);
 inputTableEventListeners.push(tableEditListener);
 
 
+function initDatasetSelect() {
+    $( "[name='dataset']").on('change', function(e){
+        // console.log('radio change');
+        // console.log(e.target.id)
+        getParentDemoModel(this).dataset = e.target.id;
+        getParentDemoModel(this).requestOutputTable();
+    });
+}
+eventListeners.push(initDatasetSelect);
+
+function initVariantSelect() {
+    $("[name='variant']").on('change', function(e){
+        console.log('radio change');
+        console.log(e.target.id)
+        getParentDemoModel(this).variant = e.target.id;
+        getParentDemoModel(this).requestOutputTable();
+    });
+}
+eventListeners.push(initVariantSelect);
+
+function initWModelSelect() {
+    $('select.wmodel').on('change', function(e){
+        console.log('select change');
+        console.log(e.target.value);
+        getParentDemoModel(this).wmodel = e.target.value;
+        getParentDemoModel(this).requestOutputTable();
+    })
+}
+eventListeners.push(initWModelSelect);
 
 function callEventListeners() {
     for (i=0; i<eventListeners.length; i++) {

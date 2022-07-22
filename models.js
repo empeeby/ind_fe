@@ -16,8 +16,11 @@ class PtRetrieval extends BaseModel {
     slug = 'pyterrier/retrieval/';
     inputTable = new Table();
     outputTable = new Table();
+    wmodels = ['BM25','DLH','Tf','TF_IDF']
     wmodel = 'BM25';
+    datasets = ['vaswani', 'msmarco_document', 'trec-covid'];
     dataset = 'vaswani';
+    variants = ['terrier_stemmed', 'terrier_unstemmed'];
     variant = 'terrier_stemmed';
     view;
 
@@ -37,11 +40,12 @@ class PtRetrieval extends BaseModel {
     }
 
     requestOutputTable() {
+        console.log('POST request to: '+this.buildUrl());
         postjson(
             this.buildUrl(),
             JSON.stringify(this.inputTable),
             function(results){
-                // console.log('successful post');
+                console.log('successful post');
                 this.outputTable.resetContents(results.columns, results.data);
                 this.view.updateOutputTable();
             },

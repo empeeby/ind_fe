@@ -38,15 +38,15 @@ class PtRetrievalView extends BaseView {
         
         $(this.containerDiv)
             .find('.wmodel')
-                .html(this.model.wmodel);        
+                .append(initSelect(this.model.wmodels,'wmodel', 'weighting model'));        
         
         $(this.containerDiv)
             .find('.dataset')
-                .html(this.model.dataset);        
+                .append(initRadioButtons(this.model.datasets, 'dataset'));        
         
         $(this.containerDiv)
             .find('.variant')
-                .html(this.model.variant);        
+                .append(initRadioButtons(this.model.variants, 'variant'));        
         
         this.model.requestOutputTable();        
     }
@@ -126,3 +126,30 @@ function buildrows(in_rows, editableColumns) {
     return outstring;
 }
 
+function initRadioButtons(options, name, displayname){
+    if (!displayname) displayname = name;
+    var outstring = '<form><fieldset>';
+    outstring += '<legend>select a '+displayname+':</legend>'
+    for (var i in options) {
+        var opt = options[i];
+        outstring += '<label for=\"'+opt+'\">'+opt+'</label>';
+        outstring += '<input type=\"radio\" name=\"'+name+'\" id=\"'+opt+'\"';
+        if (i == 0) outstring += ' checked=\"checked\"';
+        outstring += '/>';
+    }
+    outstring += '</fieldset></form>'
+    return outstring;
+}
+
+function initSelect(options, name, displayname){
+    if (!displayname) displayname = name;
+    var outstring = '';
+    outstring += '<label for=\"'+name+'\">select a '+displayname+':</label>';
+    outstring += '<select name=\"'+name+'\" class=\"'+name+'\">'
+    for (var i in options) {
+        var opt = options[i];
+        outstring += '<option value=\"'+opt+'\">'+opt+'</option>';
+    }
+    outstring += '</select>';
+    return outstring;
+}
