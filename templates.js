@@ -27,12 +27,6 @@ var templates ={
         <div class="limit-wrap">
             <h4>limit:</h4>
             <div class="limit">
-                
-                    <fieldset>
-                        <legend>Limit number of results per query (0 indicates no limit):</legend>
-                        <input type="number" id="limit" name="limit" min="0" value="0">
-                    </fieldset>
-                
             </div>
         </div>
     </div>

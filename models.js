@@ -3,6 +3,7 @@ class BaseModel {
 
     static idCounter = 0; // for giving each model-view pair in a given page a unique id
     uid;
+    view;
 
     constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
@@ -15,16 +16,16 @@ class PtRetrieval extends BaseModel {
 
     title = 'default title';
     slug = 'pyterrier/retrieval/';
-    inputTable = new Table();
-    outputTable = new Table();
-    wmodels = ['BM25','DLH','Tf','TF_IDF']
-    wmodel = 'BM25';
-    datasets = ["vaswani", "msmarco_document", "trec-covid"];
-    dataset = 'vaswani';
-    variants = ['terrier_stemmed', 'terrier_unstemmed'];
-    variant = 'terrier_stemmed';
-    indexes
-    view;
+    inputTable;
+    outputTable;
+    wmodels;
+    selectedWModel;
+    datasets;
+    selectedDataset;
+    variants;
+    selectedVariant;
+    indexes;
+    limit;
 
     defaultColumns = ['qid','query'];
     defaultData = [['0','chemical'],['1','cats']];
@@ -35,14 +36,18 @@ class PtRetrieval extends BaseModel {
 
 
         getdata(
-            API_BASE_URL+'valid_values/indexes/',
+            API_BASE_URL+'pyterrier/retrieval/get-params/',
             function(data){
-                this.indexes = data
-                console.log(this.indexes)
-                this.datasets=Object.keys(this.indexes)
-                this.dataset=this.datasets[0]
-                this.variants=this.indexes[this.dataset]
-                console.log(this.variants)
+                this.inputTable = new Table();
+                this.outputTable = new Table();
+                this.wmodels = data.wmodels;
+                this.selectedWModel = this.wmodels[0];
+                this.indexes = data.indexes;
+                this.datasets=Object.keys(this.indexes);
+                this.selectedDataset=this.datasets[0];
+                this.variants=this.indexes[this.selectedDataset];
+                this.selectedVariant=this.variants[0];
+                this.limit=2;
         
                 this.inputTable.resetContents(this.defaultColumns, this.defaultData);
                 this.outputTable.resetContents();
@@ -86,7 +91,7 @@ class PtRetrieval extends BaseModel {
     }
 
     buildUrl() {
-        return API_BASE_URL + this.slug + this.wmodel + '/' + this.dataset + '/' + this.variant + '/';
+        return API_BASE_URL + this.slug + this.selectedWModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
     }
 
     addInputRow() {
@@ -117,9 +122,9 @@ class PtRetrieval extends BaseModel {
 
     updateVariants() {
         console.log('updateVariants');
-        this.variants=this.indexes[this.dataset];
-        if (!this.variants.includes(this.variant)) {
-            this.variant = this.variants[0];
+        this.variants=this.indexes[this.selectedDataset];
+        if (!this.variants.includes(this.selectedVariant)) {
+            this.selectedVariant = this.variants[0];
         }
         this.view.updateVariants();
     }

@@ -39,12 +39,13 @@ class PtRetrievalView extends BaseView {
         
         $(this.containerDiv)
             .find('.dataset')
-                .append(initRadioButtons(this.model.datasets, 'dataset', this.model.dataset));        
+                .append(initRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
         
-        this.updateVariants()
-        // $(this.containerDiv)
-        //     .find('.variant')
-        //         .append(initRadioButtons(this.model.variants, 'variant'));        
+        $(this.containerDiv)
+            .find('.limit')
+                .append(initNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):', 0))
+
+        this.updateVariants() 
         
         this.model.requestOutputTable();        
     }
@@ -72,7 +73,7 @@ class PtRetrievalView extends BaseView {
     updateVariants(){
         $(this.containerDiv)
             .find('.variant')
-                .html(initRadioButtons(this.model.variants, 'variant', this.model.variant));
+                .html(initRadioButtons(this.model.variants, 'variant', this.model.selectedVariant));
 
         updateVariantSelectEventListeners(this.containerDiv);
     }
@@ -139,7 +140,7 @@ function initRadioButtons(options, name, checked, displayname){
     outstring += '<legend>select a '+displayname+':</legend>'
     for (var i in options) {
         var opt = options[i];
-        outstring += '<label for=\"'+opt+'\">'+opt+'</label>';
+        outstring += '<label>'+opt+'</label>';
         outstring += '<input type=\"radio\" name=\"'+name+'\" id=\"'+opt+'\"';
         if (checked == opt) outstring += ' checked=\"checked\"';
         outstring += '/>';
@@ -158,5 +159,14 @@ function initSelect(options, name, displayname){
         outstring += '<option value=\"'+opt+'\">'+opt+'</option>';
     }
     outstring += '</select></fieldset>';
+    return outstring;
+}
+
+function initNumberField(value, name, displaytext, min=0) {
+    if (!displaytext) displaytext = name;
+    var outstring = '<fieldset>';
+    outstring += '<legend>'+displaytext+'</legend>';
+    outstring += '<input type="number" id=\"'+name+'\" name=\"'+name+'\" min=\"'+min+'\" value=\"'+value+'\">'
+    outstring += '</fieldset>'
     return outstring;
 }

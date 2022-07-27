@@ -22,7 +22,7 @@ $(document).ready(function() {
 });
 
 function getParentDemoModel(elem) {
-    console.log(elem);
+    // console.log(elem);
     return demos[$(elem).parents('div.in_d').data('uid')];
 }
 

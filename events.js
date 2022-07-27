@@ -2,6 +2,11 @@ var eventListeners = []
 var inputTableEventListeners = []
 var variantSelectEventListeners = []
 
+
+// individual listener functions:
+//      each is added to one of the above arrays (groups)
+//      a group of related listeners can then be called with a single function
+
 // just for testing - actual demos will update automatically
 function submitListener(containerDiv) {
     $(containerDiv).find('.submit-button').click(function(){
@@ -80,7 +85,7 @@ function initDatasetSelect(containerDiv) {
         parentModel = getParentDemoModel(this);
         // console.log('radio change');
         // console.log(e.target.id)
-        parentModel.dataset = e.target.id;
+        parentModel.selectedDataset = e.target.id;
         parentModel.updateVariants();
         parentModel.requestOutputTable();
     });
@@ -91,7 +96,7 @@ function initVariantSelect(containerDiv) {
     $(containerDiv).find("[name='variant']").on('change', function(e){
         console.log('radio change');
         console.log(e.target.id)
-        getParentDemoModel(this).variant = e.target.id;
+        getParentDemoModel(this).selectedVariant = e.target.id;
         getParentDemoModel(this).requestOutputTable();
     });
 }
@@ -101,11 +106,37 @@ function initWModelSelect(containerDiv) {
     $(containerDiv).find('select.wmodel').on('change', function(e){
         console.log('select change');
         console.log(e.target.value);
-        getParentDemoModel(this).wmodel = e.target.value;
+        getParentDemoModel(this).selectedWModel = e.target.value;
         getParentDemoModel(this).requestOutputTable();
     })
 }
 eventListeners.push(initWModelSelect);
+
+function initLimitNumberInput(containerDiv) {
+    $(containerDiv).find("[name='limit']").on('change', function(e){
+        console.log('limit change');
+        console.log(e.target.value);
+
+        var newval = e.target.value;
+        if (typeof newval != "number") {
+            newval = Number(newval);
+        }
+        if (isNaN(newval)) {
+            newval = 0;
+        }
+        if (newval < 0) {
+            newval = 0;
+        }
+        newval = Math.floor(newval);
+        getParentDemoModel(this).limit = newval;
+        $(this).val(newval);
+        getParentDemoModel(this).requestOutputTable();
+    })
+}
+eventListeners.push(initLimitNumberInput)
+
+// *******************************************************************************
+// user callable functions below, each calls a related group
 
 function callEventListeners(containerDiv) {
     for (i=0; i<eventListeners.length; i++) {
