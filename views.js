@@ -141,13 +141,13 @@ function initRadioButtons(options, name, displayname){
 
 function initSelect(options, name, displayname){
     if (!displayname) displayname = name;
-    var outstring = '';
-    outstring += '<label for=\"'+name+'\">select a '+displayname+':</label>';
+    var outstring = '<fieldset>';
+    outstring += '<legend>select a '+displayname+':</legend>';
     outstring += '<select name=\"'+name+'\" class=\"'+name+'\">'
     for (var i in options) {
         var opt = options[i];
         outstring += '<option value=\"'+opt+'\">'+opt+'</option>';
     }
-    outstring += '</select>';
+    outstring += '</select></fieldset>';
     return outstring;
 }
