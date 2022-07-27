@@ -32,9 +32,6 @@ class PtRetrievalView extends BaseView {
                 .html(this.model.title);
         
         this.updateInputTable();
-        // $(this.containerDiv)
-        //     .find('.input_table')
-        //         .html(tableToHTML(this.model.inputTable));        
         
         $(this.containerDiv)
             .find('.wmodel')
@@ -42,11 +39,12 @@ class PtRetrievalView extends BaseView {
         
         $(this.containerDiv)
             .find('.dataset')
-                .append(initRadioButtons(this.model.datasets, 'dataset'));        
+                .append(initRadioButtons(this.model.datasets, 'dataset', this.model.dataset));        
         
-        $(this.containerDiv)
-            .find('.variant')
-                .append(initRadioButtons(this.model.variants, 'variant'));        
+        this.updateVariants()
+        // $(this.containerDiv)
+        //     .find('.variant')
+        //         .append(initRadioButtons(this.model.variants, 'variant'));        
         
         this.model.requestOutputTable();        
     }
@@ -55,18 +53,29 @@ class PtRetrievalView extends BaseView {
         var outTab =  $(this.containerDiv)
             .find('.output_table')
                 .html(tableToHTML(this.model.outputTable));
-            }
-            
-            updateInputTable() {
-                var inTab =  $(this.containerDiv).find('.input_table');
-                inTab.html(tableToHTML(this.model.inputTable, ['query']));
-                
-                updateInputTableEventListeners(this.containerDiv);
-            }
-            
-            focusLastRow() {
-                $(this.containerDiv).find('.input_table').find('td.editable').last().focus();
-            }
+    }
+    
+    updateInputTable() {
+        $(this.containerDiv)
+            .find('.input_table')
+                .html(tableToHTML(this.model.inputTable, ['query']));
+        
+        updateInputTableEventListeners(this.containerDiv);
+    }
+    
+    focusLastRow() {
+        $(this.containerDiv)
+            .find('.input_table')
+                .find('td.editable').last().focus();
+    }
+
+    updateVariants(){
+        $(this.containerDiv)
+            .find('.variant')
+                .html(initRadioButtons(this.model.variants, 'variant', this.model.variant));
+
+        updateVariantSelectEventListeners(this.containerDiv);
+    }
    
 }
 
@@ -124,7 +133,7 @@ function buildrows(in_rows, editableColumns) {
     return outstring;
 }
 
-function initRadioButtons(options, name, displayname){
+function initRadioButtons(options, name, checked, displayname){
     if (!displayname) displayname = name;
     var outstring = '<form><fieldset>';
     outstring += '<legend>select a '+displayname+':</legend>'
@@ -132,7 +141,7 @@ function initRadioButtons(options, name, displayname){
         var opt = options[i];
         outstring += '<label for=\"'+opt+'\">'+opt+'</label>';
         outstring += '<input type=\"radio\" name=\"'+name+'\" id=\"'+opt+'\"';
-        if (i == 0) outstring += ' checked=\"checked\"';
+        if (checked == opt) outstring += ' checked=\"checked\"';
         outstring += '/>';
     }
     outstring += '</fieldset></form>'

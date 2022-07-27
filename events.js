@@ -1,5 +1,6 @@
 var eventListeners = []
 var inputTableEventListeners = []
+var variantSelectEventListeners = []
 
 // just for testing - actual demos will update automatically
 function submitListener(containerDiv) {
@@ -76,10 +77,12 @@ inputTableEventListeners.push(tableEditListener);
 
 function initDatasetSelect(containerDiv) {
     $(containerDiv).find( "[name='dataset']").on('change', function(e){
+        parentModel = getParentDemoModel(this);
         // console.log('radio change');
         // console.log(e.target.id)
-        getParentDemoModel(this).dataset = e.target.id;
-        getParentDemoModel(this).requestOutputTable();
+        parentModel.dataset = e.target.id;
+        parentModel.updateVariants();
+        parentModel.requestOutputTable();
     });
 }
 eventListeners.push(initDatasetSelect);
@@ -92,7 +95,7 @@ function initVariantSelect(containerDiv) {
         getParentDemoModel(this).requestOutputTable();
     });
 }
-eventListeners.push(initVariantSelect);
+variantSelectEventListeners.push(initVariantSelect);
 
 function initWModelSelect(containerDiv) {
     $(containerDiv).find('select.wmodel').on('change', function(e){
@@ -114,5 +117,11 @@ function updateInputTableEventListeners(containerDiv) {
     // console.log('updateInputTableEventListeners');
     for (i=0; i<inputTableEventListeners.length; i++) {
         inputTableEventListeners[i](containerDiv);
+    }
+}
+
+function updateVariantSelectEventListeners(containerDiv) {
+    for (i=0; i<variantSelectEventListeners.length; i++) {
+        variantSelectEventListeners[i](containerDiv);
     }
 }

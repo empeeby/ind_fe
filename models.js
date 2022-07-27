@@ -114,4 +114,13 @@ class PtRetrieval extends BaseModel {
         while (existingQIDs.includes(candidate)) candidate++;
         return candidate.toString();;
     }
+
+    updateVariants() {
+        console.log('updateVariants');
+        this.variants=this.indexes[this.dataset];
+        if (!this.variants.includes(this.variant)) {
+            this.variant = this.variants[0];
+        }
+        this.view.updateVariants();
+    }
 }
