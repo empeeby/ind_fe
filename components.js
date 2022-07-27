@@ -47,3 +47,18 @@ function postjson(url, data, success, context) {
       });
 
 }
+
+function getdata(url,success,context) {
+    var request = $.ajax({
+        type:"GET",
+        url:url,
+        context:context,
+        dataType:'json'
+    })
+
+    request.done(success);
+
+    request.fail(function(msg) {
+        alert( "Request failed: " + JSON.stringify(msg) );
+    })
+}

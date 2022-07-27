@@ -2,6 +2,7 @@ class BaseView {
 
     containerDiv;
     model;
+    viewInitialised;
 
     constructor(containerDiv, model) {
         this.containerDiv = containerDiv;
@@ -16,7 +17,6 @@ class BaseView {
 }
 
 class PtRetrievalView extends BaseView {
-
 
     constructor(containerDiv, model) {
         super(containerDiv, model);
@@ -61,9 +61,7 @@ class PtRetrievalView extends BaseView {
                 var inTab =  $(this.containerDiv).find('.input_table');
                 inTab.html(tableToHTML(this.model.inputTable, ['query']));
                 
-                // These are called elsewhere when the page inits
-                // but they need to be reset after changes
-                if (pageInitialised) updateInputTableEventListeners();
+                updateInputTableEventListeners(this.containerDiv);
             }
             
             focusLastRow() {

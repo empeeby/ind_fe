@@ -2,8 +2,8 @@ var eventListeners = []
 var inputTableEventListeners = []
 
 // just for testing - actual demos will update automatically
-function submitListener() {
-    $('.submit-button').click(function(){
+function submitListener(containerDiv) {
+    $(containerDiv).find('.submit-button').click(function(){
         getParentDemoModel(this).requestOutputTable();
     });
 }
@@ -11,9 +11,9 @@ function submitListener() {
 eventListeners.push(submitListener);
 
 // input table updates
-function inputTableListener() {
+function inputTableListener(containerDiv) {
     // console.log('inputTableListener');
-    $('.input_table').find('td.editable').each(function(){
+    $(containerDiv).find('.input_table').find('td.editable').each(function(){
         $(this).bind('input', function(e){
             // console.log(e.target)
             var rowNum = $(e.target.parentElement).data('rownum');
@@ -26,13 +26,13 @@ function inputTableListener() {
     })
 }
 
-eventListeners.push(inputTableListener);
+// eventListeners.push(inputTableListener);
 inputTableEventListeners.push(inputTableListener);
 
 // add row to input table
-function addInputRowListener() {
+function addInputRowListener(containerDiv) {
     // console.log('addInputRowListener');
-    $('.add-input-row-button').click(function(){
+    $(containerDiv).find('.add-input-row-button').click(function(){
         getParentDemoModel(this).addInputRow();
         getParentView(this).focusLastRow();
     })
@@ -40,20 +40,20 @@ function addInputRowListener() {
 
 eventListeners.push(addInputRowListener);
 
-function deleteInputRowListener() {
+function deleteInputRowListener(containerDiv) {
     // console.log('deleteInputRowListener')
-    $('.del-input-row-button').click(function(){
+    $(containerDiv).find('.del-input-row-button').click(function(){
         var rowNum = $(this).closest('tr').data('rownum');
         // var rowNum = $(e.target.parentElement).data('rownum');
         getParentDemoModel(this).deleteInputRow(rowNum);
     })
 }
-eventListeners.push(deleteInputRowListener);
+// eventListeners.push(deleteInputRowListener);
 inputTableEventListeners.push(deleteInputRowListener);
 
-function tableEditListener() {
+function tableEditListener(containerDiv) {
     // console.log('tableEditListener');
-    $('.editable').on('keypress', function(e) {
+    $(containerDiv).find('.editable').on('keypress', function(e) {
         // if user presses enter when editing
         if (e.which == 13) {
             // clear any text selection/highlight
@@ -70,12 +70,12 @@ function tableEditListener() {
         }
     })
 }
-eventListeners.push(tableEditListener);
+// eventListeners.push(tableEditListener);
 inputTableEventListeners.push(tableEditListener);
 
 
-function initDatasetSelect() {
-    $( "[name='dataset']").on('change', function(e){
+function initDatasetSelect(containerDiv) {
+    $(containerDiv).find( "[name='dataset']").on('change', function(e){
         // console.log('radio change');
         // console.log(e.target.id)
         getParentDemoModel(this).dataset = e.target.id;
@@ -84,8 +84,8 @@ function initDatasetSelect() {
 }
 eventListeners.push(initDatasetSelect);
 
-function initVariantSelect() {
-    $("[name='variant']").on('change', function(e){
+function initVariantSelect(containerDiv) {
+    $(containerDiv).find("[name='variant']").on('change', function(e){
         console.log('radio change');
         console.log(e.target.id)
         getParentDemoModel(this).variant = e.target.id;
@@ -94,8 +94,8 @@ function initVariantSelect() {
 }
 eventListeners.push(initVariantSelect);
 
-function initWModelSelect() {
-    $('select.wmodel').on('change', function(e){
+function initWModelSelect(containerDiv) {
+    $(containerDiv).find('select.wmodel').on('change', function(e){
         console.log('select change');
         console.log(e.target.value);
         getParentDemoModel(this).wmodel = e.target.value;
@@ -104,15 +104,15 @@ function initWModelSelect() {
 }
 eventListeners.push(initWModelSelect);
 
-function callEventListeners() {
+function callEventListeners(containerDiv) {
     for (i=0; i<eventListeners.length; i++) {
-        eventListeners[i]();
+        eventListeners[i](containerDiv);
     }
 }
 
-function updateInputTableEventListeners() {
+function updateInputTableEventListeners(containerDiv) {
     // console.log('updateInputTableEventListeners');
     for (i=0; i<inputTableEventListeners.length; i++) {
-        inputTableEventListeners[i]();
+        inputTableEventListeners[i](containerDiv);
     }
 }

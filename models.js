@@ -4,8 +4,9 @@ class BaseModel {
     static idCounter = 0; // for giving each model-view pair in a given page a unique id
     uid;
 
-    constructor(containerDiv) {
+    constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
+        this.demoInitialised = false;
     }
 
 }
@@ -18,10 +19,11 @@ class PtRetrieval extends BaseModel {
     outputTable = new Table();
     wmodels = ['BM25','DLH','Tf','TF_IDF']
     wmodel = 'BM25';
-    datasets = ['vaswani', 'msmarco_document', 'trec-covid'];
+    datasets = ["vaswani", "msmarco_document", "trec-covid"];
     dataset = 'vaswani';
     variants = ['terrier_stemmed', 'terrier_unstemmed'];
     variant = 'terrier_stemmed';
+    indexes
     view;
 
     defaultColumns = ['qid','query'];
@@ -30,13 +32,43 @@ class PtRetrieval extends BaseModel {
 
     constructor(containerDiv) {
         super();
-        this.inputTable.resetContents(this.defaultColumns, this.defaultData);
-        this.outputTable.resetContents();
-        if ($(containerDiv).data('title')) {
-            this.title = $(containerDiv).data('title');
-        }
-        // keep this last for now
-        this.view = new PtRetrievalView(containerDiv, this);
+
+
+        getdata(
+            API_BASE_URL+'valid_values/indexes/',
+            function(data){
+                this.indexes = data
+                console.log(this.indexes)
+                this.datasets=Object.keys(this.indexes)
+                this.dataset=this.datasets[0]
+                this.variants=this.indexes[this.dataset]
+                console.log(this.variants)
+        
+                this.inputTable.resetContents(this.defaultColumns, this.defaultData);
+                this.outputTable.resetContents();
+                if ($(containerDiv).data('title')) {
+                    this.title = $(containerDiv).data('title');
+                }
+                // keep this last for now
+                this.view = new PtRetrievalView(containerDiv, this);
+
+                callEventListeners(containerDiv);
+            },
+            this
+        )
+            
+            
+            // this.inputTable.resetContents(this.defaultColumns, this.defaultData);
+            // this.outputTable.resetContents();
+            // if ($(containerDiv).data('title')) {
+            //     this.title = $(containerDiv).data('title');
+            // }
+            // // keep this last for now
+            // this.view = new PtRetrievalView(containerDiv, this);
+
+            // callEventListeners(containerDiv);
+            // this.demoInitialised = true;
+
     }
 
     requestOutputTable() {
