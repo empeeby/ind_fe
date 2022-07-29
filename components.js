@@ -24,9 +24,6 @@ class Table {
     }
 }
 
-// class EditableTableView {
-//     constructor(table, )
-// }
 
 function postjson(url, data, success, context) {
     var request = $.ajax({

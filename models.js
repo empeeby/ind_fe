@@ -14,9 +14,10 @@ class BaseModel {
     deleteInputRow(index) {
         this.inputTable.removeRow(index);
         console.log(this.inputTable.data);
-        this.view.updateInputTable();
+        this.view.updateInputTable(this.userEditableColumns);
         // this.requestOutputTable();
-        requestOutputTable(this);
+        // requestOutputTable(this);
+        this.requestOutputTable();
     }
 
     updateVariants() {
@@ -28,36 +29,37 @@ class BaseModel {
         this.view.updateVariants();
     }
 
+    loadIndexes(indexes) {
+        this.indexes = indexes;
+        this.datasets=Object.keys(this.indexes);
+        this.selectedDataset=this.datasets[0];
+        this.variants=this.indexes[this.selectedDataset];
+        this.selectedVariant=this.variants[0];
+    }
+
+    requestOutputTable(data=this.inputTable) {
+        console.log('POST request to: '+this.buildUrl());
+        postjson(
+            this.buildUrl(),
+            JSON.stringify(data),
+            function(results){
+                console.log('successful post');
+                this.outputTable.resetContents(results.columns, results.data);
+                this.view.updateOutputTable();
+            },
+            this // pass context to success function
+        )
+    }
+    
+
 }
 
-// 'abstract' functions used by multiple model classes
-
-function loadIndexes(context, indexes) {
-    context.indexes = indexes;
-    context.datasets=Object.keys(context.indexes);
-    context.selectedDataset=context.datasets[0];
-    context.variants=context.indexes[context.selectedDataset];
-    context.selectedVariant=context.variants[0];
-}
-
-function requestOutputTable(context, data=context.inputTable) {
-    console.log('POST request to: '+context.buildUrl());
-    postjson(
-        context.buildUrl(),
-        JSON.stringify(data),
-        function(results){
-            console.log('successful post');
-            this.outputTable.resetContents(results.columns, results.data);
-            this.view.updateOutputTable();
-        },
-        context
-    )
-}
 
 class PtRetrieval extends BaseModel {
 
     slug = 'pyterrier/retrieval/';
     title = 'pyterrier retrieval demo';
+    userEditableColumns = ['query']; // maybe set this from the server?
     template = templates.ptRetrieval;
     inputTable;
     outputTable;
@@ -83,7 +85,8 @@ class PtRetrieval extends BaseModel {
                 // initialise data model from GET request results
                 this.wmodels = data.wmodels;
                 this.selectedWModel = this.wmodels[0];
-                loadIndexes(this, data.indexes);
+                // loadIndexes(this, data.indexes);
+                this.loadIndexes(data.indexes);
                 this.limit=3;
                 
                 this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
@@ -128,10 +131,11 @@ class PtRetrieval extends BaseModel {
         this.inputTable.pushRow([this.getNextQID(),this.defaultNewQuery])
         console.log(this.inputTable.data);
         // update the input table view
-        this.view.updateInputTable();
+        this.view.updateInputTable(this.userEditableColumns);
         // this.requestOutputTable();
         // get recalculate output table
-        requestOutputTable(this);
+        // requestOutputTable(this);
+        this.requestOutputTable();
     }
     
     // deleteInputRow(index) {
@@ -173,6 +177,7 @@ class PtQueryExpansion extends BaseModel {
     slug = 'pyterrier/query-expansion/';
     title = 'pyterrier query expansion demo';
     template = templates.ptQueryExpansion;
+    userEditableColumns = ['query','qid','docno'];
     inputTable;
     outputTable;
     qemodels;
@@ -197,7 +202,8 @@ class PtQueryExpansion extends BaseModel {
                 console.log(this.qemodels);
                 this.selectedQEModel =  this.qemodels[0];
                 this.updateQeParams();
-                loadIndexes(this, data.indexes);
+                // loadIndexes(this, data.indexes);
+                this.loadIndexes(data.indexes);
 
                 this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
                 this.outputTable = new Table();
@@ -227,6 +233,31 @@ class PtQueryExpansion extends BaseModel {
     updateQeParams() {
         this.selectedQeParams = this.qeParams[this.selectedQEModel];
         // update view? or is that done from the event?
+    }
+
+    // OVERRIDE
+    requestOutputTable(data=this.inputTable) {
+        // strip rows with an empty query field (or pt will throw error)
+
+        // clone the table (we don't want to alter the data model, just the request)
+        var cleaneddata = new Table();
+        $.extend(true, cleaneddata, data)
+        
+        // get column index of 'query'
+        var queryindex = cleaneddata.columns.indexOf('query');
+
+        for (i=0; i<cleaneddata.data.length; i++) {
+            var thisquery = cleaneddata.data[i][queryindex];
+            console.log(thisquery);
+            // if this row's query is empty or just whitespace, remove the row
+            if (thisquery.trim().length == 0) {
+                cleaneddata.removeRow(i);
+                // decrement i to account for lost index
+                i--;
+            }
+        }
+
+        super.requestOutputTable(cleaneddata);
     }
 
 }

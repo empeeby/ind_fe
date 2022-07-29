@@ -10,8 +10,8 @@ var variantSelectEventListeners = []
 // just for testing - actual demos will update automatically
 function submitListener(containerDiv) {
     $(containerDiv).find('.submit-button').click(function(){
-        // getParentDemoModel(this).requestOutputTable();
-        requestOutputTable(getParentDemoModel(this));
+        getParentDemoModel(this).requestOutputTable();
+        // requestOutputTable(getParentDemoModel(this));
     });
 }
 
@@ -28,8 +28,8 @@ function inputTableListener(containerDiv) {
             var content = e.target.firstChild.textContent;
             var parentDemo = getParentDemoModel(this)
             parentDemo.inputTable.updateCell(rowNum, colNum, content);
-            // parentDemo.requestOutputTable();
-            requestOutputTable(parentDemo);
+            parentDemo.requestOutputTable();
+            // requestOutputTable(parentDemo);
         });
     })
 }
@@ -89,8 +89,8 @@ function initDatasetSelect(containerDiv) {
         // console.log(e.target.id)
         parentModel.selectedDataset = e.target.id;
         parentModel.updateVariants();
-        // parentModel.requestOutputTable();
-        requestOutputTable(parentModel);
+        parentModel.requestOutputTable();
+        // requestOutputTable(parentModel);
     });
 }
 eventListeners.push(initDatasetSelect);
@@ -100,8 +100,8 @@ function initVariantSelect(containerDiv) {
         console.log('radio change');
         console.log(e.target.id)
         getParentDemoModel(this).selectedVariant = e.target.id;
-        // getParentDemoModel(this).requestOutputTable();
-        requestOutputTable(getParentDemoModel(this));
+        getParentDemoModel(this).requestOutputTable();
+        // requestOutputTable(getParentDemoModel(this));
     });
 }
 variantSelectEventListeners.push(initVariantSelect);
@@ -123,8 +123,8 @@ function initTransformModelSelect(containerDiv) {
         console.log('select change');
         console.log(e.target.value);
         getParentDemoModel(this).updateTransformModel(e.target.value);
-        // getParentDemoModel(this).requestOutputTable();
-        requestOutputTable(getParentDemoModel(this));
+        getParentDemoModel(this).requestOutputTable();
+        // requestOutputTable(getParentDemoModel(this));
     })
 }
 // eventListeners.push(initWModelSelect);
@@ -148,8 +148,8 @@ function initLimitNumberInput(containerDiv) {
         newval = Math.floor(newval);
         getParentDemoModel(this).limit = newval;
         $(this).val(newval);
-        // getParentDemoModel(this).requestOutputTable();
-        requestOutputTable(getParentDemoModel(this));
+        getParentDemoModel(this).requestOutputTable();
+        // requestOutputTable(getParentDemoModel(this));
     })
 }
 eventListeners.push(initLimitNumberInput)

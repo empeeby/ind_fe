@@ -32,7 +32,7 @@ class BaseView {
     updateInputTable() {
         $(this.containerDiv)
             .find('.input_table')
-                .html(tableToHTML(this.model.inputTable, ['query']));
+                .html(tableToHTML(this.model.inputTable, this.model.userEditableColumns));
         
         updateInputTableEventListeners(this.containerDiv);
     }
@@ -88,8 +88,8 @@ class PtRetrievalView extends BaseView {
         .find('.limit')
         .append(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):', 0))
             
-        requestOutputTable(this.model);        
-            // this.model.requestOutputTable();        
+        // requestOutputTable(this.model);        
+        this.model.requestOutputTable();        
     }
     
     // below methods moved to BaseView
@@ -149,7 +149,8 @@ class PtQueryExpansionView extends BaseView {
         .find('.transformmodel')
         .append(buildSelect(this.model.qemodels,'transformmodel', 'QE model')); 
 
-        requestOutputTable(this.model);
+        // requestOutputTable(this.model);
+        this.model.requestOutputTable(); 
     }
 }
 
