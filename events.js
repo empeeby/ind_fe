@@ -214,6 +214,8 @@ function callEventListeners(containerDiv) {
     for (i=0; i<eventListeners.length; i++) {
         eventListeners[i](containerDiv);
     }
+
+    EVENT_LISTENERS_INITIALISED = true;
 }
 
 function updateInputTableEventListeners(containerDiv) {

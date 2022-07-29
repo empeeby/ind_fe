@@ -5,6 +5,7 @@ class BaseModel {
     uid;
     view;
     title = 'in_d demo'
+    loaded = false;
 
     constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
@@ -230,6 +231,7 @@ class PtQueryExpansion extends BaseModel {
 
                 this.view = new PtQueryExpansionView(containerDiv, this);
                 callEventListeners(containerDiv);
+                this.loaded=true;
             },
             this
         )
@@ -243,12 +245,14 @@ class PtQueryExpansion extends BaseModel {
     updateTransformModel(newModel) {
         this.selectedQEModel = newModel;
         this.updateQeParams();
+
     }
 
     updateQeParams() {
         this.selectedQeParams = this.qeParams[this.selectedQEModel];
         console.log('qe model: ' + this.selectedQEModel + '; params: ' + this.selectedQeParams);
         // update view? or is that done from the event?
+        if (this.loaded) this.view.updateQeParamsView();
     }
 
     getNewInputRow() {
