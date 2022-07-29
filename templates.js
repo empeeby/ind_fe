@@ -157,11 +157,11 @@ function buildSelect(options, name, displayname){
     return outstring;
 }
 
-function buildNumberField(value, name, displaytext, min=0) {
+function buildNumberField(value, name, displaytext, min=0, max=null, step=1) {
     if (!displaytext) displaytext = name;
     var outstring = '<fieldset>';
     outstring += '<legend>'+displaytext+'</legend>';
-    outstring += '<input type="number" id=\"'+name+'\" name=\"'+name+'\" min=\"'+min+'\" value=\"'+value+'\">'
+    outstring += '<input type="number" id="'+name+'" name="'+name+'" value="'+value+'" min="'+min+'" max="'+max+'" step="'+step+'">'
     outstring += '</fieldset>'
     return outstring;
 }

@@ -247,6 +247,7 @@ class PtQueryExpansion extends BaseModel {
 
     updateQeParams() {
         this.selectedQeParams = this.qeParams[this.selectedQEModel];
+        console.log('qe model: ' + this.selectedQEModel + '; params: ' + this.selectedQeParams);
         // update view? or is that done from the event?
     }
 

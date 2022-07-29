@@ -151,29 +151,61 @@ function initTransformModelSelect(containerDiv) {
 // eventListeners.push(initWModelSelect);
 eventListeners.push(initTransformModelSelect);
 
-function initLimitNumberInput(containerDiv) {
-    $(containerDiv).find("[name='limit']").on('change', function(e){
-        console.log('limit change');
-        console.log(e.target.value);
-
+function initNumberInput(containerDiv) {
+    $(containerDiv).find(':input[type="number"]').on('change', function(e){
+        
+        var paramName = $(this).attr('name');
+        var min = $(this).attr('min');
+        var max = $(this).attr('max');
+        var step = $(this).attr('step');
+        var parentModel = getParentDemoModel(this);
+        
         var newval = e.target.value;
         if (typeof newval != "number") {
             newval = Number(newval);
         }
         if (isNaN(newval)) {
-            newval = 0;
+            newval = min;
         }
-        if (newval < 0) {
-            newval = 0;
+        if (newval < min) {
+            newval = min;
         }
-        newval = Math.floor(newval);
-        getParentDemoModel(this).limit = newval;
+        if (newval > max) {
+            newval = max;
+        }
+        if(step == Math.floor(step)) newval = Math.floor(newval); // if step is int, constrain newval to int
+        
+        console.log('number change: ' + parentModel.uid + ' ' + paramName + ' = ' + newval);
+        parentModel[paramName] = newval;
         $(this).val(newval);
-        getParentDemoModel(this).requestOutputTable();
-        // requestOutputTable(getParentDemoModel(this));
+        parentModel.requestOutputTable();
     })
 }
-eventListeners.push(initLimitNumberInput)
+eventListeners.push(initNumberInput);
+
+// function initLimitNumberInput(containerDiv) {
+//     $(containerDiv).find("[name='limit']").on('change', function(e){
+//         console.log('limit change');
+//         console.log(e.target.value);
+
+//         var newval = e.target.value;
+//         if (typeof newval != "number") {
+//             newval = Number(newval);
+//         }
+//         if (isNaN(newval)) {
+//             newval = 0;
+//         }
+//         if (newval < 0) {
+//             newval = 0;
+//         }
+//         newval = Math.floor(newval);
+//         getParentDemoModel(this).limit = newval;
+//         $(this).val(newval);
+//         getParentDemoModel(this).requestOutputTable();
+//         // requestOutputTable(getParentDemoModel(this));
+//     })
+// }
+// eventListeners.push(initLimitNumberInput)
 
 // *******************************************************************************
 // user callable functions below, each calls a related group
