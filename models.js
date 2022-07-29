@@ -10,7 +10,16 @@ class BaseModel {
         this.uid = 'in_d_' + BaseModel.idCounter++;
     }
 
-        
+    addInputRow() {
+        // push a new row with a unique qid
+        this.inputTable.pushRow(this.getNewInputRow());
+        console.log(this.inputTable.data);
+        // update the input table view
+        this.view.updateInputTable();
+        // get recalculated output table
+        this.requestOutputTable();
+    }
+
     deleteInputRow(index) {
         this.inputTable.removeRow(index);
         console.log(this.inputTable.data);
@@ -50,6 +59,19 @@ class BaseModel {
             },
             this // pass context to success function
         )
+    }
+    
+    getNextQID(){
+        // get all existing QIDs
+        var existingQIDs = [];
+        var qidColumn = this.inputTable.columns.indexOf('qid');
+        for (i=0; i<this.inputTable.data.length; i++) {
+            existingQIDs.push(parseInt(this.inputTable.data[i][qidColumn]))
+        }
+        // start at 0 and keep incrementing until the number is not taken
+        var candidate = 0;
+        while (existingQIDs.includes(candidate)) candidate++;
+        return candidate.toString();;
     }
     
 
@@ -128,18 +150,15 @@ class PtRetrieval extends BaseModel {
         return API_BASE_URL + this.slug + this.selectedWModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
     }
 
-    addInputRow() {
-        // push a new row with a unique qid
-        this.inputTable.pushRow([this.getNextQID(),this.defaultNewQuery])
-        console.log(this.inputTable.data);
-        // update the input table view
-        this.view.updateInputTable();
-        // this.view.updateInputTable(this.userEditableColumns);
-        // this.requestOutputTable();
-        // get recalculated output table
-        // requestOutputTable(this);
-        this.requestOutputTable();
-    }
+    // addInputRow() {
+    //     // push a new row with a unique qid
+    //     this.inputTable.pushRow(this.getNewInputRow());
+    //     console.log(this.inputTable.data);
+    //     // update the input table view
+    //     this.view.updateInputTable();
+    //     // get recalculated output table
+    //     this.requestOutputTable();
+    // }
     
     // deleteInputRow(index) {
     //     this.inputTable.removeRow(index);
@@ -149,16 +168,8 @@ class PtRetrieval extends BaseModel {
     //     requestOutputTable(this);
     // }
 
-    getNextQID(){
-        // get all existing QIDs
-        var existingQIDs = [];
-        for (i=0; i<this.inputTable.data.length; i++) {
-            existingQIDs.push(parseInt(this.inputTable.data[i][0]))
-        }
-        // start at 0 and keep incrementing until the number is not taken
-        var candidate = 0;
-        while (existingQIDs.includes(candidate)) candidate++;
-        return candidate.toString();;
+    getNewInputRow() {
+        return [this.getNextQID(), this.defaultNewQuery];
     }
 
     // update WModel
@@ -237,6 +248,10 @@ class PtQueryExpansion extends BaseModel {
     updateQeParams() {
         this.selectedQeParams = this.qeParams[this.selectedQEModel];
         // update view? or is that done from the event?
+    }
+
+    getNewInputRow() {
+        return [this.getNextQID(),0,'',0,0,''];
     }
 
     // OVERRIDE
