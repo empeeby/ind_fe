@@ -26,6 +26,27 @@ function inputTableListener(containerDiv) {
             var rowNum = $(e.target.parentElement).data('rownum');
             var colNum = $(e.target).data('colnum');
             var content = e.target.firstChild.textContent;
+            console.log(e)
+            // type forcing here, all content is originally in string form
+            if ($(this).hasClass("forceinteger")) {
+                content = parseInt(content);
+                if (isNaN(content)) content = 0;
+                // if the content has been 'changed' in the int conversion, update the visible element
+                if (e.target.firstChild.textContent != String(content)) {
+                    e.target.firstChild.textContent = content;
+
+                    // by default, on change the cursor moves to the beginning of the input field
+                    // this moves it to the end
+                    range = document.createRange(); //Create a range
+                    range.selectNodeContents(this); // Select the entire contents of the element with the range
+                    range.collapse(false); // collapse the range to the end point. false means collapse to end rather than the start
+                    selection = window.getSelection(); // get the selection object (allows you to change selection)
+                    selection.removeAllRanges(); // remove any selections already made
+                    selection.addRange(range); // make the range you have just created the visible selection
+                }
+                
+            }
+
             var parentDemo = getParentDemoModel(this)
             parentDemo.inputTable.updateCell(rowNum, colNum, content);
             parentDemo.requestOutputTable();

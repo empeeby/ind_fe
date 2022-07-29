@@ -7,7 +7,7 @@ class Table {
     updateCell(rowIndex, colIndex, value) {
         // maybe check input is within bounds...
         this.data[rowIndex][colIndex] = value;
-        console.log(this);
+        // console.log(this);
     }
 
     pushRow(newRow) {

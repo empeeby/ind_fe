@@ -68,18 +68,21 @@ var templates ={
     `,
 } 
 
-function tableToHTML(table, editableFields) {
+function tableToHTML(table, editableFields=[], intFields=[]) {
     var outstring = "";
+    // convert editableFields/intFields (strings) into col numbers
     var editableColumns = [];
-    if (editableFields) {
-        for (i = 0; i < table.columns.length; i++) {
-            var colName = table.columns[i];
-            if (editableFields.includes(colName)) editableColumns.push(i);
-        }
+    var intColumns = []
+    for (i = 0; i < table.columns.length; i++) {
+        var colName = table.columns[i];
+        if (editableFields.includes(colName)) editableColumns.push(i);
+        if (intFields.includes(colName)) intColumns.push(i);
     }
+    
     // console.log(editableColumns);
     outstring += buildTableHeader(table.columns);
-    outstring += buildTableRows(table.data, editableColumns);
+    outstring += buildTableRows(table.data, editableColumns, intColumns);
+    // outstring += buildTableRows(table.data, editableColumns);
     // for (var row of table.data) {
     //     outstring += buildrow(row);
     // }
@@ -95,23 +98,27 @@ function buildTableHeader(in_array) {
     return outstring;
 }
 
-function buildrow(in_array) {
-    var outstring = "<tr>";
-    for (var elem of in_array) {
-        outstring += "<td contenteditable=\"true\" class=\"editable\">" + elem + "</td>";
-    }
-    outstring += "</tr>";
-    return outstring;
-}
+// function buildrow(in_array) {
+//     var outstring = "<tr>";
+//     for (var elem of in_array) {
+//         outstring += "<td contenteditable=\"true\" class=\"editable\">" + elem + "</td>";
+//     }
+//     outstring += "</tr>";
+//     return outstring;
+// }
 
-function buildTableRows(in_rows, editableColumns) {
+function buildTableRows(in_rows, editableColumns, intColumns=[]) {
     var outstring = '';
     for (row = 0; row < in_rows.length; row++) {
         outstring += '<tr data-rownum=' + row + '>';
         for (col=0; col < in_rows[row].length; col++) {
             outstring += '<td data-colnum=' + col;
             if (editableColumns.includes(col)) {
-                outstring += ' contenteditable=\"true\" class=\"editable\"';
+                outstring += ' contenteditable="true" class="editable';
+                if (intColumns.includes(col)) {
+                    outstring += ' forceinteger';
+                }
+                outstring += '"';
             }
             outstring += '>' + in_rows[row][col] + '</td>';
         }

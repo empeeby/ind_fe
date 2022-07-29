@@ -32,7 +32,7 @@ class BaseView {
     updateInputTable() {
         $(this.containerDiv)
             .find('.input_table')
-                .html(tableToHTML(this.model.inputTable, this.model.userEditableColumns));
+                .html(tableToHTML(this.model.inputTable, this.model.userEditableColumns, this.model.intColumns));
         
         updateInputTableEventListeners(this.containerDiv);
     }

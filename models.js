@@ -14,7 +14,8 @@ class BaseModel {
     deleteInputRow(index) {
         this.inputTable.removeRow(index);
         console.log(this.inputTable.data);
-        this.view.updateInputTable(this.userEditableColumns);
+        this.view.updateInputTable();
+        // this.view.updateInputTable(this.userEditableColumns);
         // this.requestOutputTable();
         // requestOutputTable(this);
         this.requestOutputTable();
@@ -60,6 +61,7 @@ class PtRetrieval extends BaseModel {
     slug = 'pyterrier/retrieval/';
     title = 'pyterrier retrieval demo';
     userEditableColumns = ['query']; // maybe set this from the server?
+    intColumns = []; // also probs set from server
     template = templates.ptRetrieval;
     inputTable;
     outputTable;
@@ -131,9 +133,10 @@ class PtRetrieval extends BaseModel {
         this.inputTable.pushRow([this.getNextQID(),this.defaultNewQuery])
         console.log(this.inputTable.data);
         // update the input table view
-        this.view.updateInputTable(this.userEditableColumns);
+        this.view.updateInputTable();
+        // this.view.updateInputTable(this.userEditableColumns);
         // this.requestOutputTable();
-        // get recalculate output table
+        // get recalculated output table
         // requestOutputTable(this);
         this.requestOutputTable();
     }
@@ -177,7 +180,8 @@ class PtQueryExpansion extends BaseModel {
     slug = 'pyterrier/query-expansion/';
     title = 'pyterrier query expansion demo';
     template = templates.ptQueryExpansion;
-    userEditableColumns = ['query','qid','docno'];
+    userEditableColumns = ['query','qid','docno', 'docid', 'rank','score'];
+    intColumns = ['docid']; // also probs set from server
     inputTable;
     outputTable;
     qemodels;
