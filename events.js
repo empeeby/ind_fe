@@ -176,7 +176,8 @@ function initNumberInput(containerDiv) {
         if(step == Math.floor(step)) newval = Math.floor(newval); // if step is int, constrain newval to int
         
         console.log('number change: ' + parentModel.uid + ' ' + paramName + ' = ' + newval);
-        parentModel[paramName] = newval;
+        // parentModel[paramName] = newval;
+        parentModel.set(paramName, newval);
         $(this).val(newval);
         parentModel.requestOutputTable();
     })
@@ -214,8 +215,6 @@ function callEventListeners(containerDiv) {
     for (i=0; i<eventListeners.length; i++) {
         eventListeners[i](containerDiv);
     }
-
-    EVENT_LISTENERS_INITIALISED = true;
 }
 
 function updateInputTableEventListeners(containerDiv) {

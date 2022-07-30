@@ -2,13 +2,14 @@ class BaseView {
 
     containerDiv;
     model;
-    viewInitialised;
+    viewInitialised = false;
 
     constructor(containerDiv, model) {
         this.containerDiv = containerDiv;
         this.model = model;
         this.drawTemplate();
         this.updateView();
+        this.viewInitialised = true;
     }
 
     // /////////////////////////////
@@ -160,17 +161,21 @@ class PtQueryExpansionView extends BaseView {
         .html(this.getAllQeParams());
 
         // on load these are initialised along with the group, but after every update they must be called again here
-        if (EVENT_LISTENERS_INITIALISED) initNumberInput(this.containerDiv);
+        if (this.viewInitialised) initNumberInput(this.containerDiv);
     }
 
     getAllQeParams() {
         var outstring = '';
+        console.log('selected qe params ' + this.model.uid)
         for (i in this.model.selectedQeParams) {
             var thisParam = this.model.selectedQeParams[i];
-            var value = defaultQeParams[thisParam]['value']
-            var min = defaultQeParams[thisParam]['min']
-            var max = defaultQeParams[thisParam]['max']
-            var step = defaultQeParams[thisParam]['step']
+            console.log(thisParam);
+            var thisParamProps = this.model.qeParams[this.model.selectedQEModel][thisParam];
+            console.log(thisParamProps)
+            var value = thisParamProps['value']
+            var min = thisParamProps['min']
+            var max = thisParamProps['max']
+            var step = thisParamProps['step']
             outstring += buildNumberField(value, thisParam, thisParam, min, max, step)
         }
         return outstring;

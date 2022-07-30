@@ -31,6 +31,16 @@ class BaseModel {
         this.requestOutputTable();
     }
 
+    set(attribute, newval) {
+        // checks if an attribute already exists, then sets it if so
+        if (this[attribute]) {
+            this[attribute] = newval;
+            // console.log(attribute.toUpperCase() +  this[attribute])
+            return true;
+        }
+        return false;
+    }
+
     updateVariants() {
         console.log('updateVariants');
         this.variants=this.indexes[this.selectedDataset];
@@ -127,6 +137,7 @@ class PtRetrieval extends BaseModel {
 
                 // view is set up, initialise event listeners
                 callEventListeners(containerDiv);
+                // this.loaded = true;
             },
             this
         )
@@ -200,6 +211,7 @@ class PtQueryExpansion extends BaseModel {
     selectedQEModel;
     qeParams;
     selectedQeParams;
+    selectedParamProps;
     datasets;
     selectedDataset;
     variants;
@@ -238,7 +250,14 @@ class PtQueryExpansion extends BaseModel {
     }
 
     buildUrl() {
-        return API_BASE_URL + this.slug + this.selectedQEModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/';
+        // return API_BASE_URL + this.slug + this.selectedQEModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?' + `limit`;
+        var outstring = `${API_BASE_URL}${this.slug}${this.selectedQEModel}/${this.selectedDataset}/${this.selectedVariant}/?`;
+        for (i in this.selectedQeParams) {
+            var thisParam = this.selectedQeParams[i];
+            var thisParamProps = this.qeParams[this.selectedQEModel][thisParam];
+            outstring += `${thisParam}=${thisParamProps['value']}&`
+        }
+        return outstring;
     }
 
     // update QEModel
@@ -249,7 +268,8 @@ class PtQueryExpansion extends BaseModel {
     }
 
     updateQeParams() {
-        this.selectedQeParams = this.qeParams[this.selectedQEModel];
+        this.selectedQeParams = Object.keys(this.qeParams[this.selectedQEModel]);
+        // this.selectedParamProps = 
         console.log('qe model: ' + this.selectedQEModel + '; params: ' + this.selectedQeParams);
         // update view? or is that done from the event?
         if (this.loaded) this.view.updateQeParamsView();
@@ -282,6 +302,17 @@ class PtQueryExpansion extends BaseModel {
         }
 
         super.requestOutputTable(cleaneddata);
+    }
+
+    //OVERRIDE
+    set(attribute, value) {
+        if (!super.set(attribute, value)) {
+            console.log(attribute)
+            if (this.selectedQeParams.includes(attribute)) {
+                this.qeParams[this.selectedQEModel][attribute]['value'] = value;
+                console.log(this.qeParams[this.selectedQEModel][attribute])
+            }
+        }
     }
 
 }

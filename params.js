@@ -21,8 +21,6 @@ var defaultQeParams = {
     }
 }
 
-EVENT_LISTENERS_INITIALISED = false;
-
 // get requests for 'static' server variables in here?
 // longer initial load vs more responsive?
 // would also need to ensure request received before processing...
