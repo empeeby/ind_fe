@@ -84,6 +84,11 @@ class BaseModel {
         while (existingQIDs.includes(candidate)) candidate++;
         return candidate.toString();;
     }
+
+    // update WModel or QEModel
+    updateTransformModel(newModel) {
+        this.selectedTransformModel = newModel;
+    }
     
 
 }
@@ -99,7 +104,7 @@ class PtRetrieval extends BaseModel {
     inputTable;
     outputTable;
     wmodels;
-    selectedWModel;
+    selectedTransformModel;
     datasets;
     selectedDataset;
     variants;
@@ -119,7 +124,7 @@ class PtRetrieval extends BaseModel {
             function(data){
                 // initialise data model from GET request results
                 this.wmodels = data.wmodels;
-                this.selectedWModel = this.wmodels[0];
+                this.selectedTransformModel = this.wmodels[0];
                 // loadIndexes(this, data.indexes);
                 this.loadIndexes(data.indexes);
                 this.limit=3;
@@ -159,7 +164,7 @@ class PtRetrieval extends BaseModel {
     // }
 
     buildUrl() {
-        return API_BASE_URL + this.slug + this.selectedWModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
+        return API_BASE_URL + this.slug + this.selectedTransformModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
     }
 
     // addInputRow() {
@@ -186,7 +191,7 @@ class PtRetrieval extends BaseModel {
 
     // update WModel
     updateTransformModel(newModel) {
-        this.selectedWModel = newModel;
+        this.selectedTransformModel = newModel;
     }
 
     // updateVariants() {
@@ -208,7 +213,7 @@ class PtQueryExpansion extends BaseModel {
     inputTable;
     outputTable;
     qemodels;
-    selectedQEModel;
+    selectedTransformModel;
     qeParams;
     selectedQeParams;
     selectedParamProps;
@@ -228,7 +233,7 @@ class PtQueryExpansion extends BaseModel {
                 this.qeParams = data.qemodels;
                 this.qemodels = Object.keys(data.qemodels);
                 console.log(this.qemodels);
-                this.selectedQEModel =  this.qemodels[0];
+                this.selectedTransformModel =  this.qemodels[0];
                 this.updateQeParams();
                 // loadIndexes(this, data.indexes);
                 this.loadIndexes(data.indexes);
@@ -250,39 +255,37 @@ class PtQueryExpansion extends BaseModel {
     }
 
     buildUrl() {
-        // return API_BASE_URL + this.slug + this.selectedQEModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?' + `limit`;
-        var outstring = `${API_BASE_URL}${this.slug}${this.selectedQEModel}/${this.selectedDataset}/${this.selectedVariant}/?`;
+        var outstring = `${API_BASE_URL}${this.slug}${this.selectedTransformModel}/${this.selectedDataset}/${this.selectedVariant}/?`;
         for (i in this.selectedQeParams) {
             var thisParam = this.selectedQeParams[i];
-            var thisParamProps = this.qeParams[this.selectedQEModel][thisParam];
+            var thisParamProps = this.qeParams[this.selectedTransformModel][thisParam];
             outstring += `${thisParam}=${thisParamProps['value']}&`
         }
         return outstring;
     }
-
-    // update QEModel
-    updateTransformModel(newModel) {
-        this.selectedQEModel = newModel;
-        this.updateQeParams();
-
-    }
-
+    
     updateQeParams() {
-        this.selectedQeParams = Object.keys(this.qeParams[this.selectedQEModel]);
+        this.selectedQeParams = Object.keys(this.qeParams[this.selectedTransformModel]);
         // this.selectedParamProps = 
-        console.log('qe model: ' + this.selectedQEModel + '; params: ' + this.selectedQeParams);
+        console.log('qe model: ' + this.selectedTransformModel + '; params: ' + this.selectedQeParams);
         // update view? or is that done from the event?
         if (this.loaded) this.view.updateQeParamsView();
     }
-
+    
     getNewInputRow() {
         return [this.getNextQID(),0,'',0,0,''];
     }
-
+    
+        // OVERRIDE
+        updateTransformModel(newModel) {
+            super.updateTransformModel(newModel);
+            this.updateQeParams();
+        }
+    
     // OVERRIDE
     requestOutputTable(data=this.inputTable) {
         // strip rows with an empty query field (or pt will throw error)
-
+        
         // clone the table (we don't want to alter the data model, just the request)
         var cleaneddata = new Table();
         $.extend(true, cleaneddata, data)
@@ -305,12 +308,14 @@ class PtQueryExpansion extends BaseModel {
     }
 
     //OVERRIDE
+    // catches the qe parameters that are buried within the qeParams Object
     set(attribute, value) {
+        // if this returns false then the attribute doesn't exist at top level within this model
         if (!super.set(attribute, value)) {
-            console.log(attribute)
+            // so check if it is a qe param for the currently selected qe model
             if (this.selectedQeParams.includes(attribute)) {
-                this.qeParams[this.selectedQEModel][attribute]['value'] = value;
-                console.log(this.qeParams[this.selectedQEModel][attribute])
+                // if so, update this in the main qeParams object
+                this.qeParams[this.selectedTransformModel][attribute]['value'] = value;
             }
         }
     }

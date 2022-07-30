@@ -127,18 +127,6 @@ function initVariantSelect(containerDiv) {
 }
 variantSelectEventListeners.push(initVariantSelect);
 
-// change to a more generic modelselect
-// would probs need an updateModel method to be implemented for each relevant demo
-// function initWModelSelect(containerDiv) {
-//     $(containerDiv).find('select.wmodel').on('change', function(e){
-//         console.log('select change');
-//         console.log(e.target.value);
-//         getParentDemoModel(this).selectedWModel = e.target.value;
-//         // getParentDemoModel(this).requestOutputTable();
-//         requestOutputTable(getParentDemoModel(this));
-//     })
-// }
-// eventListeners.push(initWModelSelect);
 function initTransformModelSelect(containerDiv) {
     $(containerDiv).find('select.transformmodel').on('change', function(e){
         console.log('select change');
@@ -154,31 +142,41 @@ eventListeners.push(initTransformModelSelect);
 function initNumberInput(containerDiv) {
     $(containerDiv).find(':input[type="number"]').on('change', function(e){
         
+        // get the relevant settings for this number input
         var paramName = $(this).attr('name');
         var min = $(this).attr('min');
         var max = $(this).attr('max');
         var step = $(this).attr('step');
         var parentModel = getParentDemoModel(this);
         
+        // check the new input is a number within bounds for this number input
+        var altered = false;
         var newval = e.target.value;
         if (typeof newval != "number") {
             newval = Number(newval);
+            altered = true;
         }
         if (isNaN(newval)) {
             newval = min;
+            altered = true;
         }
         if (newval < min) {
             newval = min;
+            altered = true;
         }
         if (newval > max) {
             newval = max;
+            altered = true;
         }
-        if(step == Math.floor(step)) newval = Math.floor(newval); // if step is int, constrain newval to int
-        
+        if(step == Math.floor(step)) {
+            // if step is int, constrain newval to int
+            newval = Math.floor(newval); 
+            altered = true;
+        }
+
         console.log('number change: ' + parentModel.uid + ' ' + paramName + ' = ' + newval);
-        // parentModel[paramName] = newval;
-        parentModel.set(paramName, newval);
-        $(this).val(newval);
+        parentModel.set(paramName, newval); // update data model
+        if (altered) $(this).val(newval); // update front end display if the val was altered
         parentModel.requestOutputTable();
     })
 }

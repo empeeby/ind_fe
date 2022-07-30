@@ -13,7 +13,7 @@ class BaseView {
     }
 
     // /////////////////////////////
-    // methods below are an interface that must be implemented in all children
+    // methods here are an interface that must be implemented in all children
     // /////////////////////////////
     // updateView(){}
     // /////////////////////////////
@@ -92,43 +92,6 @@ class PtRetrievalView extends BaseView {
         // requestOutputTable(this.model);        
         this.model.requestOutputTable();        
     }
-    
-    // below methods moved to BaseView
-    // $(this.containerDiv)
-    // .find('.dataset')
-    // .append(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
-
-    // $(this.containerDiv)
-    //     .find('.title')
-    //         .html(this.model.title);
-    
-    // updateOutputTable() {
-        //     $(this.containerDiv)
-    //         .find('.output_table')
-    //             .html(tableToHTML(this.model.outputTable));
-    // }
-    
-    // updateInputTable() {
-    //     $(this.containerDiv)
-    //         .find('.input_table')
-    //             .html(tableToHTML(this.model.inputTable, ['query']));
-        
-    //     updateInputTableEventListeners(this.containerDiv);
-    // }
-    
-    // focusLastRow() {
-    //     $(this.containerDiv)
-    //         .find('.input_table')
-    //             .find('td.editable').last().focus();
-    // }
-
-    // updateVariants(){
-    //     $(this.containerDiv)
-    //         .find('.variant')
-    //             .html(buildRadioButtons(this.model.variants, 'variant', this.model.selectedVariant));
-
-    //     updateVariantSelectEventListeners(this.containerDiv);
-    // }
    
 }
 
@@ -166,12 +129,12 @@ class PtQueryExpansionView extends BaseView {
 
     getAllQeParams() {
         var outstring = '';
-        console.log('selected qe params ' + this.model.uid)
+        // console.log('selected qe params ' + this.model.uid)
         for (i in this.model.selectedQeParams) {
             var thisParam = this.model.selectedQeParams[i];
-            console.log(thisParam);
-            var thisParamProps = this.model.qeParams[this.model.selectedQEModel][thisParam];
-            console.log(thisParamProps)
+            // console.log(thisParam);
+            var thisParamProps = this.model.qeParams[this.model.selectedTransformModel][thisParam];
+            // console.log(thisParamProps)
             var value = thisParamProps['value']
             var min = thisParamProps['min']
             var max = thisParamProps['max']
@@ -181,11 +144,4 @@ class PtQueryExpansionView extends BaseView {
         return outstring;
     }
 
-    // updateVariants(){
-    //     $(this.containerDiv)
-    //         .find('.variant')
-    //             .html(buildRadioButtons(this.model.variants, 'variant', this.model.selectedVariant));
-
-    //     updateVariantSelectEventListeners(this.containerDiv);
-    // }
 }
