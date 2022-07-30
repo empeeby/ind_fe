@@ -276,11 +276,11 @@ class PtQueryExpansion extends BaseModel {
         return [this.getNextQID(),0,'',0,0,''];
     }
     
-        // OVERRIDE
-        updateTransformModel(newModel) {
-            super.updateTransformModel(newModel);
-            this.updateQeParams();
-        }
+    // OVERRIDE
+    updateTransformModel(newModel) {
+        super.updateTransformModel(newModel);
+        this.updateQeParams();
+    }
     
     // OVERRIDE
     requestOutputTable(data=this.inputTable) {
@@ -321,3 +321,49 @@ class PtQueryExpansion extends BaseModel {
     }
 
 }
+
+class PtSdm extends BaseModel {
+    slug = 'pyterrier/sdm/';
+    title = 'pyterrier SDM demo';
+    template = templates.ptSdm;
+    userEditableColumns = ['query'];
+    intColumns = [];
+    inputTable;
+    outputTable;
+
+    defaultNewQuery = '';
+
+    constructor(containerDiv) {
+        super()
+
+        getdata(
+            API_BASE_URL+'pyterrier/sdm/get-params/',
+            function(data) {
+                this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
+                this.outputTable = new Table();
+
+                // check for params set by code user in the html data attributes
+                if ($(containerDiv).data('title')) {
+                    this.title = $(containerDiv).data('title');
+                }
+
+                this.view = new PtSdmView(containerDiv, this);
+                callEventListeners(containerDiv);
+            },
+            this
+        )
+
+    }
+
+    buildUrl() {
+        return `${API_BASE_URL}${this.slug}`;
+    }
+
+    getNewInputRow() {
+        return [this.getNextQID(),0,'',0,0,''];
+    }
+}
+
+// interface 
+// buildUrl() //return post request url as string
+// getNewInputRow // return new row data as array

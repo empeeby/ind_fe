@@ -32,6 +32,9 @@ $(document).ready(function() {
                 // // add demo to dict of demos
                 // demos[demo.uid] = demo;
                 break;
+            case 'pt_sdm':
+                initDemo(this, new PtSdm(this));
+                break;
         }
         
     });

@@ -145,3 +145,15 @@ class PtQueryExpansionView extends BaseView {
     }
 
 }
+
+class PtSdmView extends BaseView {
+    constructor(containerDiv, model) {
+        super(containerDiv, model);
+    }
+
+    updateView(){
+        this.updateTitle();
+        this.updateInputTable();
+        this.model.requestOutputTable(); 
+    }
+}

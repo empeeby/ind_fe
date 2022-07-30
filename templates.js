@@ -66,6 +66,15 @@ var templates ={
     <h3>output table</h3>
     <table class="output_table"></table>
     `,
+
+    ptSdm: `
+    <h2 class="title"></h2>
+    <h3>input table</h3>
+    <table class="input_table"></table>
+    <button class="add-input-row-button">add row</button>
+    <h3>output table</h3>
+    <table class="output_table"></table>
+    `
 } 
 
 function tableToHTML(table, editableFields=[], intFields=[]) {
