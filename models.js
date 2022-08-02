@@ -89,7 +89,28 @@ class BaseModel {
     updateTransformModel(newModel) {
         this.selectedTransformModel = newModel;
     }
-    
+
+    cleanEmptyQueries(data) {
+        // clone the table (we don't want to alter the data model, just the request)
+        var cleaneddata = new Table();
+        $.extend(true, cleaneddata, data)
+        
+        // get column index of 'query'
+        var queryindex = cleaneddata.columns.indexOf('query');
+
+        for (i=0; i<cleaneddata.data.length; i++) {
+            var thisquery = cleaneddata.data[i][queryindex];
+            console.log(thisquery);
+            // if this row's query is empty or just whitespace, remove the row
+            if (thisquery.trim().length == 0) {
+                cleaneddata.removeRow(i);
+                // decrement i to account for lost index
+                i--;
+            }
+        }
+
+        return cleaneddata;
+    }
 
 }
 
@@ -149,41 +170,9 @@ class PtRetrieval extends BaseModel {
 
     }
 
-    // requestOutputTable() {
-    //     console.log('POST request to: '+this.buildUrl());
-    //     postjson(
-    //         this.buildUrl(),
-    //         JSON.stringify(this.inputTable),
-    //         function(results){
-    //             console.log('successful post');
-    //             this.outputTable.resetContents(results.columns, results.data);
-    //             this.view.updateOutputTable();
-    //         },
-    //         this
-    //     )
-    // }
-
     buildUrl() {
         return API_BASE_URL + this.slug + this.selectedTransformModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
     }
-
-    // addInputRow() {
-    //     // push a new row with a unique qid
-    //     this.inputTable.pushRow(this.getNewInputRow());
-    //     console.log(this.inputTable.data);
-    //     // update the input table view
-    //     this.view.updateInputTable();
-    //     // get recalculated output table
-    //     this.requestOutputTable();
-    // }
-    
-    // deleteInputRow(index) {
-    //     this.inputTable.removeRow(index);
-    //     console.log(this.inputTable.data);
-    //     this.view.updateInputTable();
-    //     // this.requestOutputTable();
-    //     requestOutputTable(this);
-    // }
 
     getNewInputRow() {
         return [this.getNextQID(), this.defaultNewQuery];
@@ -194,14 +183,6 @@ class PtRetrieval extends BaseModel {
         this.selectedTransformModel = newModel;
     }
 
-    // updateVariants() {
-    //     console.log('updateVariants');
-    //     this.variants=this.indexes[this.selectedDataset];
-    //     if (!this.variants.includes(this.selectedVariant)) {
-    //         this.selectedVariant = this.variants[0];
-    //     }
-    //     this.view.updateVariants();
-    // }
 }
 
 class PtQueryExpansion extends BaseModel {
@@ -284,26 +265,7 @@ class PtQueryExpansion extends BaseModel {
     
     // OVERRIDE
     requestOutputTable(data=this.inputTable) {
-        // strip rows with an empty query field (or pt will throw error)
-        
-        // clone the table (we don't want to alter the data model, just the request)
-        var cleaneddata = new Table();
-        $.extend(true, cleaneddata, data)
-        
-        // get column index of 'query'
-        var queryindex = cleaneddata.columns.indexOf('query');
-
-        for (i=0; i<cleaneddata.data.length; i++) {
-            var thisquery = cleaneddata.data[i][queryindex];
-            console.log(thisquery);
-            // if this row's query is empty or just whitespace, remove the row
-            if (thisquery.trim().length == 0) {
-                cleaneddata.removeRow(i);
-                // decrement i to account for lost index
-                i--;
-            }
-        }
-
+        var cleaneddata = this.cleanEmptyQueries(data);
         super.requestOutputTable(cleaneddata);
     }
 
@@ -360,7 +322,13 @@ class PtSdm extends BaseModel {
     }
 
     getNewInputRow() {
-        return [this.getNextQID(),0,'',0,0,''];
+        return [this.getNextQID(),this.defaultNewQuery];
+    }
+
+    // OVERRIDE 
+    requestOutputTable(data=this.inputTable) {
+        var cleaneddata = this.cleanEmptyQueries(data);
+        super.requestOutputTable(cleaneddata);
     }
 }
 
