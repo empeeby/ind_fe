@@ -33,7 +33,7 @@ class BaseModel {
 
     set(attribute, newval) {
         // checks if an attribute already exists, then sets it if so
-        if (this[attribute]) {
+        if (typeof this[attribute] !== 'undefined') {
             this[attribute] = newval;
             // console.log(attribute.toUpperCase() +  this[attribute])
             return true;

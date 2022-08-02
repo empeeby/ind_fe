@@ -152,6 +152,7 @@ function initNumberInput(containerDiv) {
         // check the new input is a number within bounds for this number input
         var altered = false;
         var newval = e.target.value;
+
         if (typeof newval != "number") {
             newval = Number(newval);
             altered = true;
@@ -181,30 +182,6 @@ function initNumberInput(containerDiv) {
     })
 }
 eventListeners.push(initNumberInput);
-
-// function initLimitNumberInput(containerDiv) {
-//     $(containerDiv).find("[name='limit']").on('change', function(e){
-//         console.log('limit change');
-//         console.log(e.target.value);
-
-//         var newval = e.target.value;
-//         if (typeof newval != "number") {
-//             newval = Number(newval);
-//         }
-//         if (isNaN(newval)) {
-//             newval = 0;
-//         }
-//         if (newval < 0) {
-//             newval = 0;
-//         }
-//         newval = Math.floor(newval);
-//         getParentDemoModel(this).limit = newval;
-//         $(this).val(newval);
-//         getParentDemoModel(this).requestOutputTable();
-//         // requestOutputTable(getParentDemoModel(this));
-//     })
-// }
-// eventListeners.push(initLimitNumberInput)
 
 // *******************************************************************************
 // user callable functions below, each calls a related group

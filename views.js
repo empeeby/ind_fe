@@ -87,7 +87,7 @@ class PtRetrievalView extends BaseView {
         
         $(this.containerDiv)
         .find('.limit')
-        .append(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):', 0))
+        .append(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):'))
             
         // requestOutputTable(this.model);        
         this.model.requestOutputTable();        
