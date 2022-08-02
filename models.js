@@ -6,6 +6,19 @@ class BaseModel {
     view;
     title = 'in_d demo'
     loaded = false;
+    inputTable;
+    outputTable = new Table();
+    presets;
+    presetNames;
+    selectedPresetName;
+    transformModels;
+    selectedTransformModel;
+    datasets;
+    selectedDataset;
+    variants;
+    selectedVariant;
+    indexes;
+    defaultNewRow;
 
     constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
@@ -32,6 +45,36 @@ class BaseModel {
     }
 
     set(attribute, newval) {
+
+        // special cases in switch
+        switch (attribute) {
+            case 'inputTable':
+                this.inputTable = new Table(newval.columns, newval.data);
+                if (newval.editable !== 'undefined') {
+                    this.userEditableColumns = newval.editable;
+                    console.log('new editable cols')
+                }
+                if (newval.new_row !== 'undefined') {
+                    this.defaultNewRow = newval.new_row;
+                    console.log('new row:')
+                }
+                return true;
+            case 'model':
+                this.updateTransformModel(newval);
+                return true;
+            case 'dataset':
+                this.selectedDataset = newval;
+                this.variants=this.indexes[this.selectedDataset];
+                // this.updateVariants();
+            case 'variant':
+                this.selectedVariant = newval;
+        }
+        // // special case: setting a new input table
+        // if (attribute == 'inputTable') {
+        //     this.inputTable = new Table(newval.columns, newval.data);
+        //     return true;
+        // }
+
         // checks if an attribute already exists, then sets it if so
         if (typeof this[attribute] !== 'undefined') {
             this[attribute] = newval;
@@ -70,6 +113,27 @@ class BaseModel {
             },
             this // pass context to success function
         )
+    }
+
+    getNewInputRow(){
+        var newRow = [];
+
+        console.log('defNewRow = ')
+        console.log(this.defaultNewRow)
+
+        for (var j=0; j<this.defaultNewRow.length; j++) {
+            var newValue = this.defaultNewRow[j];
+            console.log('value ' + j + newValue);
+            if (newValue == '#nextQID') {
+                newRow[j] = this.getNextQID();
+                continue;
+            } 
+            newRow[j] = newValue;
+        }
+        console.log('newRow = ')
+        console.log(newRow)
+
+        return newRow;
     }
     
     getNextQID(){
@@ -112,6 +176,28 @@ class BaseModel {
         return cleaneddata;
     }
 
+    loadPreset(presetName) {
+        console.log('load preset')
+        // if preset exists
+        if (!this.presets.hasOwnProperty(presetName)) {
+            console.log(`WARNING: Preset ${presetName} does not exist.`);
+            return;
+        }
+
+        this.selectedPreset = this.presets[presetName];
+
+        console.log('this selpre: ')
+        console.log(this.selectedPreset)
+
+        // load each value in this preset
+        for (const item in this.selectedPreset) {
+            this.set(item, this.selectedPreset[item]); // make sure set names that don't correlate directly are loaded correctly in overloaded child method
+            // console.log(item);
+            // console.log(this.selectedPreset[item]);
+        }
+
+    }
+
 }
 
 
@@ -119,21 +205,21 @@ class PtRetrieval extends BaseModel {
 
     slug = 'pyterrier/retrieval/';
     title = 'pyterrier retrieval demo';
-    userEditableColumns = ['query']; // maybe set this from the server?
+    // userEditableColumns = ['query']; // maybe set this from the server?
     intColumns = []; // also probs set from server
     template = templates.ptRetrieval;
-    inputTable;
-    outputTable;
-    wmodels;
-    selectedTransformModel;
-    datasets;
-    selectedDataset;
-    variants;
-    selectedVariant;
-    indexes;
+    // inputTable;
+    // outputTable;
+    // transformModels;
+    // selectedTransformModel;
+    // datasets;
+    // selectedDataset;
+    // variants;
+    // selectedVariant;
+    // indexes;
     limit;
 
-    defaultNewQuery = '';
+    // defaultNewQuery = '';
 
     constructor(containerDiv) {
         super(containerDiv);
@@ -143,15 +229,22 @@ class PtRetrieval extends BaseModel {
         getdata(
             API_BASE_URL+'pyterrier/retrieval/get-params/',
             function(data){
+                    
                 // initialise data model from GET request results
-                this.wmodels = data.wmodels;
-                this.selectedTransformModel = this.wmodels[0];
-                // loadIndexes(this, data.indexes);
+                this.presets = data.presets;
+                this.presetNames = Object.keys(this.presets);
+                this.transformModels = data.wmodels;
+                this.selectedTransformModel = this.transformModels[0];
+                    // loadIndexes(this, data.indexes);
                 this.loadIndexes(data.indexes);
                 this.limit=3;
                 
-                this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
-                this.outputTable = new Table();
+                // this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
+                // this.outputTable = new Table();
+                
+                this.loadPreset(this.presetNames[0])
+                console.log('the presets')
+                console.log(this.presetNames.length)
 
                 // check for params set by code user in the html data attributes
                 if ($(containerDiv).data('title')) {
@@ -162,7 +255,7 @@ class PtRetrieval extends BaseModel {
                 this.view = new PtRetrievalView(containerDiv, this);
 
                 // view is set up, initialise event listeners
-                callEventListeners(containerDiv);
+                // callEventListeners(containerDiv);
                 // this.loaded = true;
             },
             this
@@ -174,14 +267,19 @@ class PtRetrieval extends BaseModel {
         return API_BASE_URL + this.slug + this.selectedTransformModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
     }
 
-    getNewInputRow() {
-        return [this.getNextQID(), this.defaultNewQuery];
-    }
+    // getNewInputRow() {
+    //     return [this.getNextQID(), this.defaultNewQuery];
+    // }
 
-    // update WModel
-    updateTransformModel(newModel) {
-        this.selectedTransformModel = newModel;
-    }
+    // // OVERRIDE
+    // set(attribute, newval) {
+    //     switch (attribute) {
+            
+                
+    //     }
+
+    //     super.set(attribute, newval);
+    // }
 
 }
 
@@ -191,18 +289,18 @@ class PtQueryExpansion extends BaseModel {
     template = templates.ptQueryExpansion;
     userEditableColumns = ['query','qid','docno', 'docid', 'rank','score'];
     intColumns = ['docid']; // also probs set from server
-    inputTable;
-    outputTable;
-    qemodels;
-    selectedTransformModel;
+    // inputTable;
+    // outputTable;
+    // transformModels;
+    // selectedTransformModel;
     qeParams;
     selectedQeParams;
     selectedParamProps;
-    datasets;
-    selectedDataset;
-    variants;
-    selectedVariant;
-    indexes;
+    // datasets;
+    // selectedDataset;
+    // variants;
+    // selectedVariant;
+    // indexes;
 
     constructor(containerDiv) {
         super();
@@ -212,15 +310,15 @@ class PtQueryExpansion extends BaseModel {
             function(data) {
                 // qemodel dict might need unpacking
                 this.qeParams = data.qemodels;
-                this.qemodels = Object.keys(data.qemodels);
-                console.log(this.qemodels);
-                this.selectedTransformModel =  this.qemodels[0];
+                this.transformModels = Object.keys(data.qemodels);
+                console.log(this.transformModels);
+                this.selectedTransformModel =  this.transformModels[0];
                 this.updateQeParams();
                 // loadIndexes(this, data.indexes);
                 this.loadIndexes(data.indexes);
 
                 this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
-                this.outputTable = new Table();
+                // this.outputTable = new Table();
 
                 // check for params set by code user in the html data attributes
                 if ($(containerDiv).data('title')) {
@@ -228,7 +326,7 @@ class PtQueryExpansion extends BaseModel {
                 }
 
                 this.view = new PtQueryExpansionView(containerDiv, this);
-                callEventListeners(containerDiv);
+                // callEventListeners(containerDiv);
                 this.loaded=true;
             },
             this
@@ -290,8 +388,8 @@ class PtSdm extends BaseModel {
     template = templates.ptSdm;
     userEditableColumns = ['query'];
     intColumns = [];
-    inputTable;
-    outputTable;
+    // inputTable;
+    // outputTable;
 
     defaultNewQuery = '';
 
@@ -302,7 +400,7 @@ class PtSdm extends BaseModel {
             API_BASE_URL+'pyterrier/sdm/get-params/',
             function(data) {
                 this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
-                this.outputTable = new Table();
+                // this.outputTable = new Table();
 
                 // check for params set by code user in the html data attributes
                 if ($(containerDiv).data('title')) {
@@ -310,7 +408,7 @@ class PtSdm extends BaseModel {
                 }
 
                 this.view = new PtSdmView(containerDiv, this);
-                callEventListeners(containerDiv);
+                // callEventListeners(containerDiv);
             },
             this
         )

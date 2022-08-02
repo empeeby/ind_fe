@@ -49,6 +49,8 @@ function getParentDemoModel(elem) {
 }
 
 function getParentView(elem) {
+    console.log('getParentView for:')
+    console.log(elem)
     return demos[$(elem).parents('div.in_d').data('uid')].view;
 }
 // used by events to access the parent demo object for a given DOM element

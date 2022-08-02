@@ -4,9 +4,9 @@ var templates ={
 
     ptRetrieval: `
     <h2 class="title"></h2>
+    <div class="preset"></div>
     <h3>input table</h3>
     <table class="input_table"></table>
-    <button class="add-input-row-button">add row</button>
     <div class="params">
         <h3>parameters</h3>
         <div class="wmodel-wrap">
@@ -39,7 +39,6 @@ var templates ={
     <h2 class="title"></h2>
     <h3>input table</h3>
     <table class="input_table"></table>
-    <button class="add-input-row-button">add row</button>
     <div class="params">
         <h3>parameters</h3>
         <div class="qemodel-wrap">
@@ -71,7 +70,6 @@ var templates ={
     <h2 class="title"></h2>
     <h3>input table</h3>
     <table class="input_table"></table>
-    <button class="add-input-row-button">add row</button>
     <h3>output table</h3>
     <table class="output_table"></table>
     `
@@ -85,16 +83,17 @@ function tableToHTML(table, editableFields=[], intFields=[]) {
     for (i = 0; i < table.columns.length; i++) {
         var colName = table.columns[i];
         if (editableFields.includes(colName)) editableColumns.push(i);
-        if (intFields.includes(colName)) intColumns.push(i);
+        if (intFields.includes(colName) || FORCE_INT_INPUT.includes(colName)) intColumns.push(i);
     }
     
     // console.log(editableColumns);
     outstring += buildTableHeader(table.columns);
     outstring += buildTableRows(table.data, editableColumns, intColumns);
-    // outstring += buildTableRows(table.data, editableColumns);
-    // for (var row of table.data) {
-    //     outstring += buildrow(row);
-    // }
+    if (editableFields.length > 0) {
+        console.log('ADDING BUTTON')
+        outstring += `<tr><td><button class="add-input-row-button">add row</button></td></tr>`
+        outstring += '<!-- GHOSTLY COMMENT -->'
+    }
     return outstring;
 }
 
@@ -153,14 +152,16 @@ function buildRadioButtons(options, name, checked, displayname){
     return outstring;
 }
 
-function buildSelect(options, name, displayname){
-    if (!displayname) displayname = name;
+function buildSelect(options, name, value, displayname=name){
+    // if (!displayname) displayname = name;
     var outstring = '<fieldset>';
     outstring += '<legend>select a '+displayname+':</legend>';
     outstring += '<select name=\"'+name+'\" class=\"'+name+'\">'
     for (var i in options) {
         var opt = options[i];
-        outstring += '<option value=\"'+opt+'\">'+opt+'</option>';
+        outstring += `<option value="${opt}"`
+        if (opt == value) outstring += ` selected="selected"`
+        outstring += `>${opt}</option>`;
     }
     outstring += '</select></fieldset>';
     return outstring;

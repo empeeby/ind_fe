@@ -10,6 +10,7 @@ class BaseView {
         this.drawTemplate();
         this.updateView();
         this.viewInitialised = true;
+        callEventListeners(containerDiv);
     }
 
     // /////////////////////////////
@@ -21,7 +22,8 @@ class BaseView {
     // /////////////////////////////
 
     drawTemplate() {
-        $(this.containerDiv).append(this.model.template);
+        $(this.containerDiv).html(this.model.template);
+        // $(this.containerDiv).append(this.model.template);
     }
 
     updateTitle() {
@@ -53,7 +55,8 @@ class BaseView {
     updateDatasets(){
         $(this.containerDiv)
             .find('.dataset')
-                .append(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
+                .html(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
+                // .append(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
 
     }
 
@@ -63,6 +66,15 @@ class BaseView {
                 .html(buildRadioButtons(this.model.variants, 'variant', this.model.selectedVariant));
 
         updateVariantSelectEventListeners(this.containerDiv);
+    }
+
+    updatePresets(){
+        var presetDiv = $(this.containerDiv).find('.preset')
+        if (this.model.presetNames.length > 1) {
+            presetDiv.html(buildSelect(this.model.presetNames, 'preset', this.model.selectedPresetName))
+        } else {
+            presetDiv.html('')
+        }
     }
 }
 
@@ -80,14 +92,17 @@ class PtRetrievalView extends BaseView {
         this.updateInputTable();
         this.updateDatasets();
         this.updateVariants();
+        if (!this.viewInitialised) this.updatePresets();
         
         $(this.containerDiv)
         .find('.transformmodel')
-        .append(buildSelect(this.model.wmodels,'transformmodel', 'weighting model'));        
+        .html(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'weighting model'));        
+        // .append(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'weighting model'));        
         
         $(this.containerDiv)
         .find('.limit')
-        .append(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):'))
+        .html(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):'))
+        // .append(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):'))
             
         // requestOutputTable(this.model);        
         this.model.requestOutputTable();        
@@ -112,7 +127,8 @@ class PtQueryExpansionView extends BaseView {
 
         $(this.containerDiv)
         .find('.transformmodel')
-        .append(buildSelect(this.model.qemodels,'transformmodel', 'QE model')); 
+        .html(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'QE model')); 
+        // .append(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'QE model')); 
 
         // requestOutputTable(this.model);
         this.model.requestOutputTable(); 

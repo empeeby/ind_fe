@@ -19,6 +19,7 @@ eventListeners.push(submitListener);
 
 // input table updates
 function inputTableListener(containerDiv) {
+    // listen for edits to input table data
     // console.log('inputTableListener');
     $(containerDiv).find('.input_table').find('td.editable').each(function(){
         $(this).bind('input', function(e){
@@ -31,10 +32,15 @@ function inputTableListener(containerDiv) {
             if ($(this).hasClass("forceinteger")) {
                 content = parseInt(content);
                 if (isNaN(content)) content = 0;
+
+                if (String(content) == '') {
+                    content = 0;
+                }
+                
                 // if the content has been 'changed' in the int conversion, update the visible element
                 if (e.target.firstChild.textContent != String(content)) {
                     e.target.firstChild.textContent = content;
-
+                    
                     // by default, on change the cursor moves to the beginning of the input field
                     // this moves it to the end
                     range = document.createRange(); //Create a range
@@ -62,12 +68,15 @@ inputTableEventListeners.push(inputTableListener);
 function addInputRowListener(containerDiv) {
     // console.log('addInputRowListener');
     $(containerDiv).find('.add-input-row-button').click(function(){
-        getParentDemoModel(this).addInputRow();
-        getParentView(this).focusLastRow();
+        var parentModel = getParentDemoModel(this);
+        var parentView = getParentView(this);
+        console.log(this);
+        parentModel.addInputRow();
+        parentView.focusLastRow();
     })
 }
 
-eventListeners.push(addInputRowListener);
+inputTableEventListeners.push(addInputRowListener);
 
 function deleteInputRowListener(containerDiv) {
     // console.log('deleteInputRowListener')
@@ -182,6 +191,18 @@ function initNumberInput(containerDiv) {
     })
 }
 eventListeners.push(initNumberInput);
+
+function initPresetSelect(containerDiv) {
+    $(containerDiv).find('select.preset').on('change', function(e){
+        console.log('preset change');
+        console.log(e.target.value);
+
+        getParentDemoModel(this).loadPreset(e.target.value);
+        getParentView(this).updateView();
+        callEventListeners(containerDiv);
+    })
+}
+eventListeners.push(initPresetSelect)
 
 // *******************************************************************************
 // user callable functions below, each calls a related group
