@@ -377,7 +377,8 @@ class PtSdm extends BaseModel {
         getdata(
             API_BASE_URL+'pyterrier/sdm/get-params/',
             function(data) {
-                this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
+                this.initPreset(data.presets);
+                // this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
                 // this.outputTable = new Table();
 
                 // check for params set by code user in the html data attributes
