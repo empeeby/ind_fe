@@ -37,6 +37,7 @@ var templates ={
     
     ptQueryExpansion: `
     <h2 class="title"></h2>
+    <div class="preset"></div>
     <h3>input table</h3>
     <table class="input_table"></table>
     <div class="params">
@@ -68,6 +69,7 @@ var templates ={
 
     ptSdm: `
     <h2 class="title"></h2>
+    <div class="preset"></div>
     <h3>input table</h3>
     <table class="input_table"></table>
     <h3>output table</h3>

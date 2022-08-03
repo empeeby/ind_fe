@@ -176,9 +176,25 @@ class BaseModel {
         return cleaneddata;
     }
 
+    initPreset(presetData, index=0) {
+        this.presets = presetData;
+        this.presetNames = Object.keys(this.presets);
+        if (index >= this.presetNames.length) {
+            if (index == 0) {
+                // if there are no presets
+                console.log('ERROR: no presets found!');
+                // TODO load some default instead
+                return;
+            }
+            console.log('CAUTION: preset index out of range, loading preset index 0 instead');
+            index = 0;
+        }
+        this.loadPreset(this.presetNames[index]);
+    }
+
     loadPreset(presetName) {
         console.log('load preset')
-        // if preset exists
+        // if preset doesn't exist, warn and stop
         if (!this.presets.hasOwnProperty(presetName)) {
             console.log(`WARNING: Preset ${presetName} does not exist.`);
             return;
@@ -191,9 +207,7 @@ class BaseModel {
 
         // load each value in this preset
         for (const item in this.selectedPreset) {
-            this.set(item, this.selectedPreset[item]); // make sure set names that don't correlate directly are loaded correctly in overloaded child method
-            // console.log(item);
-            // console.log(this.selectedPreset[item]);
+            this.set(item, this.selectedPreset[item]); // CAUTION: make sure set attribute names that don't correlate directly are loaded correctly in overloaded child method
         }
 
     }
@@ -205,21 +219,9 @@ class PtRetrieval extends BaseModel {
 
     slug = 'pyterrier/retrieval/';
     title = 'pyterrier retrieval demo';
-    // userEditableColumns = ['query']; // maybe set this from the server?
     intColumns = []; // also probs set from server
     template = templates.ptRetrieval;
-    // inputTable;
-    // outputTable;
-    // transformModels;
-    // selectedTransformModel;
-    // datasets;
-    // selectedDataset;
-    // variants;
-    // selectedVariant;
-    // indexes;
-    limit;
-
-    // defaultNewQuery = '';
+    limit=0;
 
     constructor(containerDiv) {
         super(containerDiv);
@@ -231,18 +233,11 @@ class PtRetrieval extends BaseModel {
             function(data){
                     
                 // initialise data model from GET request results
-                this.presets = data.presets;
-                this.presetNames = Object.keys(this.presets);
+                // e.g. get preset data, available models + indexes
                 this.transformModels = data.wmodels;
-                this.selectedTransformModel = this.transformModels[0];
-                    // loadIndexes(this, data.indexes);
                 this.loadIndexes(data.indexes);
-                this.limit=3;
+                this.initPreset(data.presets);
                 
-                // this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
-                // this.outputTable = new Table();
-                
-                this.loadPreset(this.presetNames[0])
                 console.log('the presets')
                 console.log(this.presetNames.length)
 
@@ -253,10 +248,6 @@ class PtRetrieval extends BaseModel {
                 
                 // model is set up, create and link a view
                 this.view = new PtRetrievalView(containerDiv, this);
-
-                // view is set up, initialise event listeners
-                // callEventListeners(containerDiv);
-                // this.loaded = true;
             },
             this
         )
@@ -266,20 +257,6 @@ class PtRetrieval extends BaseModel {
     buildUrl() {
         return API_BASE_URL + this.slug + this.selectedTransformModel + '/' + this.selectedDataset + '/' + this.selectedVariant + '/?limit=' + this.limit ;
     }
-
-    // getNewInputRow() {
-    //     return [this.getNextQID(), this.defaultNewQuery];
-    // }
-
-    // // OVERRIDE
-    // set(attribute, newval) {
-    //     switch (attribute) {
-            
-                
-    //     }
-
-    //     super.set(attribute, newval);
-    // }
 
 }
 
@@ -308,16 +285,17 @@ class PtQueryExpansion extends BaseModel {
         getdata(
             API_BASE_URL+'pyterrier/query-expansion/get-params/',
             function(data) {
-                // qemodel dict might need unpacking
+                
+                // initialise data model from GET request results
+                // e.g. get preset data, available models (+ their additional params) + indexes
                 this.qeParams = data.qemodels;
                 this.transformModels = Object.keys(data.qemodels);
-                console.log(this.transformModels);
-                this.selectedTransformModel =  this.transformModels[0];
-                this.updateQeParams();
-                // loadIndexes(this, data.indexes);
+                // this.selectedTransformModel =  this.transformModels[0];
+                // this.updateQeParams();
                 this.loadIndexes(data.indexes);
+                this.initPreset(data.presets);
 
-                this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
+                // this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
                 // this.outputTable = new Table();
 
                 // check for params set by code user in the html data attributes

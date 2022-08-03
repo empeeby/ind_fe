@@ -9,6 +9,7 @@ class BaseView {
         this.model = model;
         this.drawTemplate();
         this.updateView();
+        this.updatePresets();
         this.viewInitialised = true;
         callEventListeners(containerDiv);
     }
@@ -92,7 +93,7 @@ class PtRetrievalView extends BaseView {
         this.updateInputTable();
         this.updateDatasets();
         this.updateVariants();
-        if (!this.viewInitialised) this.updatePresets();
+        // if (!this.viewInitialised) this.updatePresets();
         
         $(this.containerDiv)
         .find('.transformmodel')
