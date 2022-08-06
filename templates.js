@@ -5,75 +5,104 @@ var templates ={
     ptRetrieval: `
     <h2 class="title"></h2>
     <div class="preset"></div>
-    <h3>input table</h3>
-    <table class="input_table"></table>
-    <div class="params">
-        <h3>parameters</h3>
-        <div class="wmodel-wrap">
-            <h4>wmodel:</h4>
-            <div class="transformmodel">
+    <div class="demo-content">
+        <div class="table-wrap">
+            <h3 class="subtitle">input table</h3>
+            <table class="input_table"></table>
+        </div>
+        <div class="params-wrap">
+            <h3 class="subtitle">parameters</h3>
+            <div class="params">
+                
+                <div class="index-wrap">
+                <h4 class="subtitle">index selection:</h4>
+                    <div class="dataset-wrap">
+                        <div class="dataset">
+                        </div>
+                    </div>
+                    <div class="variant-wrap">
+                        <div class="variant">
+                        </div>
+                    </div>
+                </div>
+                <div class="param-col">
+                    <div class="wmodel-wrap">
+                        <h4 class="subtitle">wmodel:</h4>
+                        <div class="transformmodel">
+                        </div>
+                    </div>
+                    <div class="limit-wrap">
+                        <h4 class="subtitle">limit:</h4>
+                        <div class="limit">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="dataset-wrap">
-            <h4>dataset:</h4>
-            <div class="dataset">
-            </div>
-        </div>
-        <div class="variant-wrap">
-            <h4>variant:</h4>
-            <div class="variant">
-            </div>
-        </div>
-        <div class="limit-wrap">
-            <h4>limit:</h4>
-            <div class="limit">
-            </div>
+        <div class="table-wrap">
+            <h3 class="subtitle">output table</h3>
+            <table class="output_table"></table>
         </div>
     </div>
-    <!--<button class="submit-button">submit</button>-->
-    <h3>output table</h3>
-    <table class="output_table"></table>
     `,
     
     ptQueryExpansion: `
     <h2 class="title"></h2>
     <div class="preset"></div>
-    <h3>input table</h3>
-    <table class="input_table"></table>
-    <div class="params">
-        <h3>parameters</h3>
-        <div class="qemodel-wrap">
-            <h4>qemodel:</h4>
-            <div class="transformmodel">
+    
+    <div class="demo-content">
+        <div class="table-wrap">
+            <h3 class="subtitle">input table</h3>
+            <table class="input_table"></table>
+        </div>
+
+        <div class="params-wrap">
+            <h3 class="subtitle">parameters</h3>
+            <div class="params">
+                <div class="index-wrap">
+                <h4 class="subtitle">index selection:</h4>
+                    <div class="dataset-wrap">
+                        <div class="dataset">
+                        </div>
+                    </div>
+                    <div class="variant-wrap">
+                        <div class="variant">
+                        </div>
+                    </div>
+                </div>
+                <div class="qemodel-wrap">
+                    <h4 class="subtitle">qemodel:</h4>
+                    <div class="transformmodel">
+                    </div>
+                </div>
+                <div class="qe-params-wrap">
+                    <h4 class="subtitle">qe parameters:</h4>
+                    <div class="qe-params">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="dataset-wrap">
-            <h4>dataset:</h4>
-            <div class="dataset">
-            </div>
-        </div>
-        <div class="variant-wrap">
-            <h4>variant:</h4>
-            <div class="variant">
-            </div>
-        </div>
-        <div class="qe-params-wrap">
-            <h4>qe parameters:</h4>
-            <div class="qe-params">
-            </div>
+
+        <div class="table-wrap">
+            <h3 class="subtitle">output table</h3>
+            <table class="output_table"></table>
         </div>
     </div>
-    <h3>output table</h3>
-    <table class="output_table"></table>
     `,
 
     ptSdm: `
     <h2 class="title"></h2>
     <div class="preset"></div>
-    <h3>input table</h3>
-    <table class="input_table"></table>
-    <h3>output table</h3>
-    <table class="output_table"></table>
+    <div class="demo-content">
+        <div class="table-wrap">
+            <h3 class="subtitle">input table</h3>
+            <table class="input_table"></table>
+        </div>
+        <div class="table-wrap">
+            <h3 class="subtitle">output table</h3>
+            <table class="output_table"></table>
+        </div>
+    </div>
     `
 } 
 
@@ -143,6 +172,7 @@ function buildRadioButtons(options, name, checked, displayname){
     if (!displayname) displayname = name;
     var outstring = '<form><fieldset>';
     outstring += '<legend>select a '+displayname+':</legend>'
+    outstring += `<div class="radio">`
     for (var i in options) {
         var opt = options[i];
         outstring += '<label>'+opt+'</label>';
@@ -150,7 +180,7 @@ function buildRadioButtons(options, name, checked, displayname){
         if (checked == opt) outstring += ' checked=\"checked\"';
         outstring += '/>';
     }
-    outstring += '</fieldset></form>'
+    outstring += '</div></fieldset></form>'
     return outstring;
 }
 
