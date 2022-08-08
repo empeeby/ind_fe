@@ -70,14 +70,16 @@ var templates ={
                         </div>
                     </div>
                 </div>
-                <div class="qemodel-wrap">
-                    <h4 class="subtitle">qemodel:</h4>
-                    <div class="transformmodel">
+                <div class="param-col">
+                    <div class="qemodel-wrap">
+                        <h4 class="subtitle">qemodel:</h4>
+                        <div class="transformmodel">
+                        </div>
                     </div>
-                </div>
-                <div class="qe-params-wrap">
-                    <h4 class="subtitle">qe parameters:</h4>
-                    <div class="qe-params">
+                    <div class="qe-params-wrap">
+                        <h4 class="subtitle">qe parameters:</h4>
+                        <div class="qe-params">
+                        </div>
                     </div>
                 </div>
             </div>

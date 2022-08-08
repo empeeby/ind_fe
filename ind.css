@@ -19,6 +19,9 @@
   border:1px solid;
   border-radius:.3em;
   font-size: 70%;
+   max-width: 66%;
+   margin-left: auto;
+   margin-right: auto;
  }
  .in_d>.demo-content {
   flex-direction:row;
@@ -140,16 +143,28 @@
  tr:first-child{
    background-color: var(--darkaccent);
  }
+
+@media screen and (max-width: 1000px) {
+  .in_d{
+    max-width: 80%;
+  }
+}
  
  @media screen and (max-width: 850px) {
    table {
      max-width: 100%;
+   }
+   .in_d {
+     max-width: 90%;
    }
  }
  
  @media screen and (max-width: 600px) {
    td {
      max-width: 100px;
+   } 
+   .in_d {
+     max-width: 100%
    }
  }
  
