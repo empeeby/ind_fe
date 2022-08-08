@@ -19,9 +19,11 @@ class BaseModel {
     selectedVariant;
     indexes;
     defaultNewRow;
+    timeout;
 
     constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
+        this.timeout = -1;
     }
 
     addInputRow() {
@@ -102,6 +104,13 @@ class BaseModel {
     }
 
     requestOutputTable(data=this.inputTable) {
+        // debouncing wrapper to limit calls to the server to once every DEBOUNCE_TIMEOUT milliseconds
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data);    
+    }
+
+    debouncedRequestOutputTable(data=this.inputTable) {
+        // this.timeout = -1; //reset the debounce timeout
         console.log('POST request to: '+this.buildUrl());
         postjson(
             this.buildUrl(),
@@ -194,7 +203,7 @@ class BaseModel {
 
     loadPreset(presetName) {
         console.log('load preset')
-        // if preset doesn't exist, warn and stop
+        // if preset doesn't exist, warn and stop (this should never happen in normal use as the select menu only has valid names by design)
         if (!this.presets.hasOwnProperty(presetName)) {
             console.log(`WARNING: Preset ${presetName} does not exist.`);
             return;
