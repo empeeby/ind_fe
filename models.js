@@ -348,11 +348,12 @@ class PtQueryExpansion extends BaseModel {
         this.updateQeParams();
     }
     
-    // OVERRIDE
-    requestOutputTable(data=this.inputTable) {
-        var cleaneddata = this.cleanEmptyQueries(data);
-        super.requestOutputTable(cleaneddata);
-    }
+    // commented out for now to show the user the true pt response
+    // OVERRIDE - removes rows with an empty query field (this produces a pt error)
+    // requestOutputTable(data=this.inputTable) {
+    //     var cleaneddata = this.cleanEmptyQueries(data);
+    //     super.requestOutputTable(cleaneddata);
+    // }
 
     //OVERRIDE
     // catches the qe parameters that are buried within the qeParams Object
@@ -411,11 +412,12 @@ class PtSdm extends BaseModel {
         return [this.getNextQID(),this.defaultNewQuery];
     }
 
-    // OVERRIDE 
-    requestOutputTable(data=this.inputTable) {
-        var cleaneddata = this.cleanEmptyQueries(data);
-        super.requestOutputTable(cleaneddata);
-    }
+    // commented out for now to show the user the true pt response
+    // OVERRIDE - removes rows with an empty query field (this produces a pt error)
+    // requestOutputTable(data=this.inputTable) {
+    //     var cleaneddata = this.cleanEmptyQueries(data);
+    //     super.requestOutputTable(cleaneddata);
+    // }
 }
 
 // interface 
