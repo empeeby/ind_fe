@@ -150,7 +150,7 @@
 .example-code-wrap {
   max-width: 90%;
   margin: 1em;
-/*   overflow-x: auto; */
+  overflow-x: auto;
   text-align: center;
 }
 .example-code h3 {
