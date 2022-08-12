@@ -125,12 +125,17 @@ var templates ={
     ptTransformerOperators: `
     <h2 class="title"></h2>
     <div class="preset"></div>
+    <div class="operator_display_wrap">
+            <h3 class="subtitle">operator</h3>
+            <p class="operator_display"><p>
+    </div>
     <div class="demo-content">
         <div class="table-wrap">
             <h3 class="subtitle">input table</h3>
             <table class="input_table"></table>
             <p class="input_warning"></p>
         </div>
+        
         <div class="op-arg-2-wrap">
             <div class="table-wrap table_b_wrap">
                 <h3 class="subtitle">input table b</h3>

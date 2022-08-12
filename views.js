@@ -185,6 +185,7 @@ class PtSdmView extends BaseView {
     updateView(){
         this.updateTitle();
         this.updateInputTable();
+        this.updateOperator();
         this.model.requestOutputTable(); 
     }
 }
@@ -197,9 +198,16 @@ class PtTransformerOperatorsView extends BaseView {
     updateView() {
         this.updateTitle();
         this.updateInputTable();
+        this.updateOperator();
         this.updateArg2();
 
         this.model.requestOutputTable();
+    }
+
+    updateOperator(){
+        $(this.containerDiv)
+            .find('.operator_display')
+                .html(this.model.selectedOperator)
     }
 
     updateArg2(){
