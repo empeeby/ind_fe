@@ -15,6 +15,8 @@ class BaseModel {
     selectedTransformModel;
     datasets;
     selectedDataset;
+    datasetNumOfDocs;
+    selectedDatasetNumOfDocs;
     variants;
     selectedVariant;
     indexes;
@@ -88,6 +90,9 @@ class BaseModel {
     }
 
     updateVariants() {
+        // also update number of docs in this dataset
+        this.selectedDatasetNumOfDocs = this.datasetNumOfDocs[this.selectedDataset];
+
         console.log('updateVariants');
         this.variants=this.indexes[this.selectedDataset];
         if (!this.variants.includes(this.selectedVariant)) {
@@ -104,10 +109,18 @@ class BaseModel {
         this.selectedVariant=this.variants[0];
     }
 
+    loadNumDocs(numDocs) {
+        this.datasetNumOfDocs = numDocs;
+        this.selectedDatasetNumOfDocs = this.datasetNumOfDocs[this.selectedDataset];
+    }
+
     requestOutputTable(data=this.inputTable) {
         // debouncing wrapper to limit calls to the server to once every DEBOUNCE_TIMEOUT milliseconds
         clearTimeout(this.timeout);
-        this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data);    
+        this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data);
+        
+        // helpful warning to user if docid is out of range
+        this.updateInputTableWarning(data);
     }
 
     debouncedRequestOutputTable(data=this.inputTable) {
@@ -185,29 +198,50 @@ class BaseModel {
 
         return cleaneddata;
     }
-    updateWarningForEmptyQueries(data) {
-        if (this.loaded == false) return;
-        // get column index of 'query'
-        var queryindex = data.columns.indexOf('query');
-        var emptyQueryFound = false;
 
-        for (i=0; i<data.data.length; i++) {
-            var thisquery = data.data[i][queryindex];
-            console.log(thisquery);
+    updateInputTableWarning(intable) {
+        // if there is not a view loaded yet, skip this
+        if (this.loaded == false) return;
+
+        // we are displaying warnings for:
+        //  - empty query fields
+        //  - docids out of range
+
+        var queryindex = intable.columns.indexOf('query');
+        var emptyQueryFound = false;
+        var docidindex = intable.columns.indexOf('docid');
+        var badDocIdFound = false;
+
+        for (i=0; i<intable.data.length; i++) {
+            // if this table has a query column
+            if (queryindex >= 0) {
+                var thisquery = intable.data[i][queryindex];
+                // if this row's query is empty or just whitespace, tell view to display a warning
+                if (thisquery.trim().length == 0) {
+                    console.log('EMPTY QUERY FOUND');
+                    var warnString = 'CAUTION: one or more queries are empty.<br/>This can cause PyTerrier to return an error.';
+                    this.view.setWarning(warnString);
+                    emptyQueryFound = true;
+                }
+            }
+            if (docidindex >= 0) {
+                var thisdocid = intable.data[i][docidindex];
             // if this row's query is empty or just whitespace, tell view to display a warning
-            if (thisquery.trim().length == 0) {
-                console.log('EMPTY QUERY FOUND');
-                var warnString = 'CAUTION: one or more queries are empty.<br/>This can cause PyTerrier to return an error.';
-                this.view.setWarning(warnString);
-                emptyQueryFound = true;
+                if (thisdocid >= this.selectedDatasetNumOfDocs) {
+                    console.log('BAD DOCID FOUND');
+                    var warnString = `CAUTION: one or more docid values out of range.<br/>
+                    This can cause PyTerrier to return an error.<br/>
+                    Selected dataset '${this.selectedDataset}' has ${this.selectedDatasetNumOfDocs} documents.<br/>
+                    Valid docids in the range 0 - ${this.selectedDatasetNumOfDocs-1}` ;
+                    this.view.setWarning(warnString);
+                    badDocIdFound = true;
+                }
             }
         }
 
-        if (!emptyQueryFound) {
-            // this.inputTableWarning = '';
+        if (!emptyQueryFound && !badDocIdFound) {
             this.view.setWarning('');
         }
-
     }
 
     initPreset(presetData, index=0) {
@@ -270,6 +304,7 @@ class PtRetrieval extends BaseModel {
                 // e.g. get preset data, available models + indexes
                 this.transformModels = data.wmodels;
                 this.loadIndexes(data.indexes);
+                this.loadNumDocs(data.dataset_number_of_docs);
                 this.initPreset(data.presets);
                 
                 console.log('the presets')
@@ -329,6 +364,7 @@ class PtQueryExpansion extends BaseModel {
                 // this.selectedTransformModel =  this.transformModels[0];
                 // this.updateQeParams();
                 this.loadIndexes(data.indexes);
+                this.loadNumDocs(data.dataset_number_of_docs);
                 this.initPreset(data.presets);
 
                 // this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
@@ -365,20 +401,10 @@ class PtQueryExpansion extends BaseModel {
         if (this.loaded) this.view.updateQeParamsView();
     }
     
-    // getNewInputRow() {
-    //     return [this.getNextQID(),0,'',0,0,''];
-    // }
-    
     // OVERRIDE
     updateTransformModel(newModel) {
         super.updateTransformModel(newModel);
         this.updateQeParams();
-    }
-    
-    // OVERRIDE - displays a warning for rows with an empty query field (this produces a pt error)
-    requestOutputTable(data=this.inputTable) {
-        this.updateWarningForEmptyQueries(data);
-        super.requestOutputTable(data);
     }
 
     //OVERRIDE
@@ -435,15 +461,6 @@ class PtSdm extends BaseModel {
         return `${API_BASE_URL}${this.slug}`;
     }
 
-    // getNewInputRow() {
-    //     return [this.getNextQID(),this.defaultNewQuery];
-    // }
-
-    // OVERRIDE - displays a warning for rows with an empty query field (this produces a pt error)
-    requestOutputTable(data=this.inputTable) {
-        this.updateWarningForEmptyQueries(data);
-        super.requestOutputTable(data);
-    }
 }
 
 class PtTransformerOperators extends BaseModel {
