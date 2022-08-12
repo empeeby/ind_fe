@@ -1,7 +1,7 @@
 // used as an abstract class for all demos
 class BaseModel {
 
-    static idCounter = 0; // for giving each model-view pair in a given page a unique id
+    static idCounter = 0; // for giving each demo in a given page a unique id
     uid;
     view;
     title = 'in_d demo'
@@ -22,7 +22,7 @@ class BaseModel {
     indexes;
     defaultNewRow;
     timeout;
-    // inputTableWarning;
+    codeExample;
 
     constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
@@ -43,9 +43,7 @@ class BaseModel {
         this.inputTable.removeRow(index);
         console.log(this.inputTable.data);
         this.view.updateInputTable();
-        // this.view.updateInputTable(this.userEditableColumns);
-        // this.requestOutputTable();
-        // requestOutputTable(this);
+        // get recalculated output table
         this.requestOutputTable();
     }
 
@@ -74,11 +72,6 @@ class BaseModel {
             case 'variant':
                 this.selectedVariant = newval;
         }
-        // // special case: setting a new input table
-        // if (attribute == 'inputTable') {
-        //     this.inputTable = new Table(newval.columns, newval.data);
-        //     return true;
-        // }
 
         // checks if an attribute already exists, then sets it if so
         if (typeof this[attribute] !== 'undefined') {
@@ -119,7 +112,7 @@ class BaseModel {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data);
         
-        // helpful warning to user if docid is out of range
+        // helpful warning to user in common cases that pt throws an error
         this.updateInputTableWarning(data);
     }
 
@@ -132,6 +125,7 @@ class BaseModel {
             function(results){
                 console.log('successful post');
                 this.outputTable.resetContents(results.columns, results.data);
+                this.codeExample = results.example_code;
                 this.view.updateOutputTable();
             },
             this // pass context to success function
@@ -224,9 +218,10 @@ class BaseModel {
                     emptyQueryFound = true;
                 }
             }
+            // if this table has a docid column
             if (docidindex >= 0) {
                 var thisdocid = intable.data[i][docidindex];
-            // if this row's query is empty or just whitespace, tell view to display a warning
+                // if this row's query is empty or just whitespace, tell view to display a warning
                 if (thisdocid >= this.selectedDatasetNumOfDocs) {
                     console.log('BAD DOCID FOUND');
                     var warnString = `CAUTION: one or more docid values out of range.<br/>
@@ -239,6 +234,7 @@ class BaseModel {
             }
         }
 
+        // if there are no errors
         if (!emptyQueryFound && !badDocIdFound) {
             this.view.setWarning('');
         }
