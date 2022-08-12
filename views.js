@@ -86,9 +86,9 @@ class BaseView {
         }
     }
 
-    setWarning(warnString){
+    setWarning(warnString, target='.input_warning'){
         $(this.containerDiv)
-            .find('.input_warning')
+            .find(target)
                 .html(warnString);
     }
 }
@@ -186,5 +186,41 @@ class PtSdmView extends BaseView {
         this.updateTitle();
         this.updateInputTable();
         this.model.requestOutputTable(); 
+    }
+}
+
+class PtTransformerOperatorsView extends BaseView {
+    constructor(containerDiv, model) {
+        super(containerDiv, model);
+    }
+
+    updateView() {
+        this.updateTitle();
+        this.updateInputTable();
+        this.updateArg2();
+
+        this.model.requestOutputTable();
+    }
+
+    updateArg2(){
+        // update the table and (or?) number input
+        $(this.containerDiv)
+            .find('.input_table_b')
+                .html(tableToHTML(this.model.arg_2_table, this.model.userEditableColumns, this.model.intColumns));
+
+        $(this.containerDiv)
+            .find('.arg_2_number')
+                .html(buildNumberField(3,'number'))
+
+        // toggle visibility so that only the right one is shown
+        if (this.model.arg_2_type == 'table') {
+            console.log('arg2:table')
+            $(this.containerDiv).find('.table_b_wrap').show();
+            $(this.containerDiv).find('.arg_2_number_wrap').hide();
+        } else if (this.model.arg_2_type == 'int' || this.model.arg_2_type == 'float') {
+            console.log('arg2:number')
+            $(this.containerDiv).find('.table_b_wrap').hide();
+            $(this.containerDiv).find('.arg_2_number_wrap').show();
+        }
     }
 }

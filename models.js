@@ -55,11 +55,9 @@ class BaseModel {
                 this.inputTable = new Table(newval.columns, newval.data);
                 if (newval.editable !== 'undefined') {
                     this.userEditableColumns = newval.editable;
-                    console.log('new editable cols')
                 }
                 if (newval.new_row !== 'undefined') {
                     this.defaultNewRow = newval.new_row;
-                    console.log('new row:')
                 }
                 return true;
             case 'model':
@@ -67,6 +65,7 @@ class BaseModel {
                 return true;
             case 'dataset':
                 this.selectedDataset = newval;
+                this.selectedDatasetNumOfDocs = this.datasetNumOfDocs[this.selectedDataset];
                 this.variants=this.indexes[this.selectedDataset];
                 // this.updateVariants();
             case 'variant':
@@ -113,7 +112,13 @@ class BaseModel {
         this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data);
         
         // helpful warning to user in common cases that pt throws an error
-        this.updateInputTableWarning(data);
+        if (data.columns != undefined && data.data != undefined) {
+            this.updateInputTableWarning(data);
+        } else if (data.input_table_a != undefined && data.input_table_b != undefined) {
+            this.updateInputTableWarning(data.input_table_a);
+            this.updateInputTableWarning(data.input_table_b, '.input_warning_b');
+        }
+
     }
 
     debouncedRequestOutputTable(data=this.inputTable) {
@@ -193,7 +198,7 @@ class BaseModel {
         return cleaneddata;
     }
 
-    updateInputTableWarning(intable) {
+    updateInputTableWarning(intable, target='.input_warning') {
         // if there is not a view loaded yet, skip this
         if (this.loaded == false) return;
 
@@ -214,7 +219,7 @@ class BaseModel {
                 if (thisquery.trim().length == 0) {
                     console.log('EMPTY QUERY FOUND');
                     var warnString = 'CAUTION: one or more queries are empty.<br/>This can cause PyTerrier to return an error.';
-                    this.view.setWarning(warnString);
+                    this.view.setWarning(warnString, target);
                     emptyQueryFound = true;
                 }
             }
@@ -228,7 +233,7 @@ class BaseModel {
                     This can cause PyTerrier to return an error.<br/>
                     Selected dataset '${this.selectedDataset}' has ${this.selectedDatasetNumOfDocs} documents.<br/>
                     Valid docids in the range 0 - ${this.selectedDatasetNumOfDocs-1}` ;
-                    this.view.setWarning(warnString);
+                    this.view.setWarning(warnString, target);
                     badDocIdFound = true;
                 }
             }
@@ -236,7 +241,7 @@ class BaseModel {
 
         // if there are no errors
         if (!emptyQueryFound && !badDocIdFound) {
-            this.view.setWarning('');
+            this.view.setWarning('', target);
         }
     }
 
@@ -271,7 +276,7 @@ class BaseModel {
 
         // load each value in this preset
         for (const item in this.selectedPreset) {
-            this.set(item, this.selectedPreset[item]); // CAUTION: make sure set attribute names that don't correlate directly are loaded correctly in overloaded child method
+            this.set(item, this.selectedPreset[item]); // CAUTION: make sure set attribute names that don't correlate directly to class attributes are loaded correctly in overloaded child method
         }
 
     }
@@ -412,6 +417,7 @@ class PtQueryExpansion extends BaseModel {
             if (this.selectedQeParams.includes(attribute)) {
                 // if so, update this in the main qeParams object
                 this.qeParams[this.selectedTransformModel][attribute]['value'] = value;
+                return true;
             }
         }
     }
@@ -466,20 +472,73 @@ class PtTransformerOperators extends BaseModel {
     template = templates.ptTransformerOperators;
     userEditableColumns = ['query','qid','docno', 'docid', 'rank','score'];
     intColumns = [];
+    operators;
+    selectedOperator;
+    operatorInfo;
+    arg_2_type;
+    // these might need defaults setting in case they are switched to without a preset (if we make that possible)
+    arg_2_table = new Table();
+    arg_2_number = 666;
 
     constructor(containerDiv) {
+        super();
 
+        getdata(
+            API_BASE_URL+'pyterrier/transformer-operators/get-params/',
+            function(data) {
+                this.operatorInfo = data.operators;
+                this.operators = Object.keys(data.operators);
+
+                this.initPreset(data.presets);
+
+                if ($(containerDiv).data('title')) {
+                    this.title = $(containerDiv.data('title'));
+                }
+
+                this.view = new PtTransformerOperatorsView(containerDiv, this);
+                this.loaded=true;
+            },
+            this
+        )
     }
 
     buildUrl(){
+        var outstring = `${API_BASE_URL}${this.slug}${this.selectedOperator}/`
+        
+        if (this.arg_2_type == 'float' || this.arg_2_type == 'int') {
+            outstring += `?numerical_arg=${this.arg_2_number}`;
+        }
+
+        return outstring;
+    }
+
+    // OVERRIDE - handle operator/arg2 switching
+    set(attribute, newval) {
+        switch (attribute) {
+            case 'operator':
+                if (this.operators.includes(newval)) {
+                    this.selectedOperator = newval;
+                    this.arg_2_type = this.operatorInfo[this.selectedOperator];
+                    return true;
+                } else {
+                    return false;
+                }
+        }
+
+        super.set(attribute, newval);
 
     }
 
-    getNewInputRow(){
-
+    // OVERRIDE
+    requestOutputTable(){
+        var data = {}
+        data['input_table_a'] = this.inputTable;
+        data['input_table_b'] = this.arg_2_table;
+        console.log(data);
+        super.requestOutputTable(data);
     }
+
 }
 
-// interface 
+// interface for new models
 // buildUrl() //return post request url as string
-// getNewInputRow // return new row data as array

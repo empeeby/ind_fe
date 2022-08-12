@@ -120,6 +120,38 @@ var templates ={
             <pre><code class="example-code language-python">...</code></pre>
         </div>
     </div>
+    `,
+
+    ptTransformerOperators: `
+    <h2 class="title"></h2>
+    <div class="preset"></div>
+    <div class="demo-content">
+        <div class="table-wrap">
+            <h3 class="subtitle">input table</h3>
+            <table class="input_table"></table>
+            <p class="input_warning"></p>
+        </div>
+        <div class="op-arg-2-wrap">
+            <div class="table-wrap table_b_wrap">
+                <h3 class="subtitle">input table b</h3>
+                <table class="input_table_b"></table>
+                <p class="input_warning_b"></p>
+            </div>
+            <div class="arg_2_number_wrap">
+                <h3 class="subtitle">numerical argument</h3>
+                <div class="arg_2_number">
+                </div>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <h3 class="subtitle">output table</h3>
+            <table class="output_table"></table>
+        </div>
+        <div class="example-code-wrap">
+            <h3>example code</h3>
+            <pre><code class="example-code language-python">...</code></pre>
+        </div>
+    </div>
     `
 } 
 

@@ -14,26 +14,18 @@ $(document).ready(function() {
         switch ($(this).data('endpoint')) {
             case 'pt_retrieval':
                 initDemo(this, new PtRetrieval(this));
-                
-                // var demo = new PtRetrieval(this);
-                // $(this).attr('data-uid', demo.uid);
-                // demos[demo.uid] = demo;
-                
-                // console.log(demos.keys());
-                // console.log(demos);
                 break;
+
             case 'pt_query_expansion':
                 initDemo(this, new PtQueryExpansion(this));
-            
-                // // create new QE demo model
-                // var demo = new PtQueryExpansion(this);
-                // // add uid to parent div element
-                // $(this).attr('data-uid', demo.uid);
-                // // add demo to dict of demos
-                // demos[demo.uid] = demo;
                 break;
+
             case 'pt_sdm':
                 initDemo(this, new PtSdm(this));
+                break;
+
+            case 'pt_transformer_operators':
+                initDemo(this, new PtTransformerOperators(this));
                 break;
         }
         
