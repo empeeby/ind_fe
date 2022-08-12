@@ -151,7 +151,10 @@
   max-width: 90%;
   margin: 1em;
   overflow-x: auto;
+<<<<<<< HEAD
 /*   overflow-x: auto; */
+=======
+>>>>>>> fb902750c6d36a4705f55eb56e83422620e86fbe
   text-align: center;
 }
 .example-code h3 {
