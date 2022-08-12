@@ -9,6 +9,7 @@ var templates ={
         <div class="table-wrap">
             <h3 class="subtitle">input table</h3>
             <table class="input_table"></table>
+            <p class="input_warning"></p>
         </div>
         <div class="params-wrap">
             <h3 class="subtitle">parameters</h3>
@@ -54,6 +55,7 @@ var templates ={
         <div class="table-wrap">
             <h3 class="subtitle">input table</h3>
             <table class="input_table"></table>
+            <p class="input_warning"></p>
         </div>
 
         <div class="params-wrap">
@@ -99,6 +101,7 @@ var templates ={
         <div class="table-wrap">
             <h3 class="subtitle">input table</h3>
             <table class="input_table"></table>
+            <p class="input_warning"></p>
         </div>
         <div class="table-wrap">
             <h3 class="subtitle">output table</h3>

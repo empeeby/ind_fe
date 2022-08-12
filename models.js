@@ -20,6 +20,7 @@ class BaseModel {
     indexes;
     defaultNewRow;
     timeout;
+    // inputTableWarning;
 
     constructor() {
         this.uid = 'in_d_' + BaseModel.idCounter++;
@@ -184,6 +185,30 @@ class BaseModel {
 
         return cleaneddata;
     }
+    updateWarningForEmptyQueries(data) {
+        if (this.loaded == false) return;
+        // get column index of 'query'
+        var queryindex = data.columns.indexOf('query');
+        var emptyQueryFound = false;
+
+        for (i=0; i<data.data.length; i++) {
+            var thisquery = data.data[i][queryindex];
+            console.log(thisquery);
+            // if this row's query is empty or just whitespace, tell view to display a warning
+            if (thisquery.trim().length == 0) {
+                console.log('EMPTY QUERY FOUND');
+                var warnString = 'CAUTION: one or more queries are empty.<br/>This can cause PyTerrier to return an error.';
+                this.view.setWarning(warnString);
+                emptyQueryFound = true;
+            }
+        }
+
+        if (!emptyQueryFound) {
+            // this.inputTableWarning = '';
+            this.view.setWarning('');
+        }
+
+    }
 
     initPreset(presetData, index=0) {
         this.presets = presetData;
@@ -257,6 +282,8 @@ class PtRetrieval extends BaseModel {
                 
                 // model is set up, create and link a view
                 this.view = new PtRetrievalView(containerDiv, this);
+
+                this.loaded = true;
             },
             this
         )
@@ -338,9 +365,9 @@ class PtQueryExpansion extends BaseModel {
         if (this.loaded) this.view.updateQeParamsView();
     }
     
-    getNewInputRow() {
-        return [this.getNextQID(),0,'',0,0,''];
-    }
+    // getNewInputRow() {
+    //     return [this.getNextQID(),0,'',0,0,''];
+    // }
     
     // OVERRIDE
     updateTransformModel(newModel) {
@@ -348,12 +375,11 @@ class PtQueryExpansion extends BaseModel {
         this.updateQeParams();
     }
     
-    // commented out for now to show the user the true pt response
-    // OVERRIDE - removes rows with an empty query field (this produces a pt error)
-    // requestOutputTable(data=this.inputTable) {
-    //     var cleaneddata = this.cleanEmptyQueries(data);
-    //     super.requestOutputTable(cleaneddata);
-    // }
+    // OVERRIDE - displays a warning for rows with an empty query field (this produces a pt error)
+    requestOutputTable(data=this.inputTable) {
+        this.updateWarningForEmptyQueries(data);
+        super.requestOutputTable(data);
+    }
 
     //OVERRIDE
     // catches the qe parameters that are buried within the qeParams Object
@@ -398,6 +424,7 @@ class PtSdm extends BaseModel {
 
                 this.view = new PtSdmView(containerDiv, this);
                 // callEventListeners(containerDiv);
+                this.loaded = true;
             },
             this
         )
@@ -408,16 +435,36 @@ class PtSdm extends BaseModel {
         return `${API_BASE_URL}${this.slug}`;
     }
 
-    getNewInputRow() {
-        return [this.getNextQID(),this.defaultNewQuery];
+    // getNewInputRow() {
+    //     return [this.getNextQID(),this.defaultNewQuery];
+    // }
+
+    // OVERRIDE - displays a warning for rows with an empty query field (this produces a pt error)
+    requestOutputTable(data=this.inputTable) {
+        this.updateWarningForEmptyQueries(data);
+        super.requestOutputTable(data);
+    }
+}
+
+class PtTransformerOperators extends BaseModel {
+    slug = 'pyterrier/transformer-operators/';
+
+    title = 'pyterrier transformer operators demo';
+    template = templates.ptTransformerOperators;
+    userEditableColumns = ['query','qid','docno', 'docid', 'rank','score'];
+    intColumns = [];
+
+    constructor(containerDiv) {
+
     }
 
-    // commented out for now to show the user the true pt response
-    // OVERRIDE - removes rows with an empty query field (this produces a pt error)
-    // requestOutputTable(data=this.inputTable) {
-    //     var cleaneddata = this.cleanEmptyQueries(data);
-    //     super.requestOutputTable(cleaneddata);
-    // }
+    buildUrl(){
+
+    }
+
+    getNewInputRow(){
+
+    }
 }
 
 // interface 

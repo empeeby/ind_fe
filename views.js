@@ -37,7 +37,7 @@ class BaseView {
         $(this.containerDiv)
             .find('.input_table')
                 .html(tableToHTML(this.model.inputTable, this.model.userEditableColumns, this.model.intColumns));
-        
+
         updateInputTableEventListeners(this.containerDiv);
     }
 
@@ -76,6 +76,12 @@ class BaseView {
         } else {
             presetDiv.html('')
         }
+    }
+
+    setWarning(warnString){
+        $(this.containerDiv)
+            .find('.input_warning')
+                .html(warnString);
     }
 }
 
