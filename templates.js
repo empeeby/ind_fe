@@ -44,6 +44,10 @@ var templates ={
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
         </div>
+        <div class="example-code-wrap">
+            <h3>example code</h3>
+            <pre><code class="example-code language-python">...</code></pre>
+        </div>
     </div>
     `,
     
@@ -91,6 +95,10 @@ var templates ={
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
         </div>
+        <div class="example-code-wrap">
+            <h3>example code</h3>
+            <pre><code class="example-code language-python">...</code></pre>
+        </div>
     </div>
     `,
 
@@ -106,6 +114,10 @@ var templates ={
         <div class="table-wrap">
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
+        </div>
+        <div class="example-code-wrap">
+            <h3>example code</h3>
+            <pre><code class="example-code language-python">...</code></pre>
         </div>
     </div>
     `

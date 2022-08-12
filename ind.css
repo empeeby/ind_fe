@@ -52,7 +52,8 @@
  /*   flex-shrink: 2; */
  }
  .params-wrap,
- .table-wrap {
+ .table-wrap,
+.example-code-wrap{
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -146,6 +147,24 @@
  tr:first-child{
    background-color: var(--darkaccent);
  }
+.example-code-wrap {
+  max-width: 90%;
+  margin: 1em;
+/*   overflow-x: auto; */
+  text-align: center;
+}
+.example-code h3 {
+
+}
+.example-code-wrap pre {
+  text-align: left;
+  padding: 1em;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
 
 @media screen and (max-width: 1000px) {
   .in_d{

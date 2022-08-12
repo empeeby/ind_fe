@@ -45,6 +45,14 @@ class BaseView {
         $(this.containerDiv)
             .find('.output_table')
                 .html(tableToHTML(this.model.outputTable));
+
+        var exampleCodeBlock = $(this.containerDiv).find('.example-code');
+        exampleCodeBlock.html(this.model.codeExample);
+
+        // var containerDivElement = this.containerDiv[0];
+        // hljs.highlightElement(document.querySelector('pre code'))
+        // hljs.highlightElement(containerDivElement.querySelector('pre code'))
+        // hljs.highlightElement(exampleCodeBlock[0])
     }
     
     focusLastRow() {
