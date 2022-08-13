@@ -46,6 +46,7 @@ var templates ={
         </div>
         <div class="example-code-wrap">
             <h3>example code</h3>
+            <button onclick="copyText(event)">copy code</button>
             <pre><code class="example-code language-python">...</code></pre>
         </div>
     </div>
@@ -97,6 +98,7 @@ var templates ={
         </div>
         <div class="example-code-wrap">
             <h3>example code</h3>
+            <button onclick="copyText(event)">copy code</button>
             <pre><code class="example-code language-python">...</code></pre>
         </div>
     </div>
@@ -117,6 +119,7 @@ var templates ={
         </div>
         <div class="example-code-wrap">
             <h3>example code</h3>
+            <button onclick="copyText(event)">copy code</button>
             <pre><code class="example-code language-python">...</code></pre>
         </div>
     </div>
