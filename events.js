@@ -18,16 +18,16 @@ function submitListener(containerDiv) {
 eventListeners.push(submitListener);
 
 // input table updates
-function inputTableListener(containerDiv) {
+function inputTableListener(containerDiv, targetClass) {
     // listen for edits to input table data
     // console.log('inputTableListener');
-    $(containerDiv).find('.input_table').find('td.editable').each(function(){
+    $(containerDiv).find(targetClass).find('td.editable').each(function(){
         $(this).bind('input', function(e){
-            // console.log(e.target)
+            
             var rowNum = $(e.target.parentElement).data('rownum');
             var colNum = $(e.target).data('colnum');
             var content = e.target.firstChild.textContent;
-            console.log(e)
+            
             // type forcing here, all content is originally in string form
             if ($(this).hasClass("forceinteger")) {
                 content = parseInt(content);
@@ -53,10 +53,20 @@ function inputTableListener(containerDiv) {
                 
             }
 
-            var parentDemo = getParentDemoModel(this)
-            parentDemo.inputTable.updateCell(rowNum, colNum, content);
+            var parentDemo = getParentDemoModel(this);
+            var parentTable;
+
+            switch (targetClass) {
+                case '.input_table':
+                    parentTable = parentDemo.inputTable;
+                    break;
+                case '.input_table_b':
+                    parentTable = parentDemo.arg_2_table;
+                    break;
+            }
+
+            parentTable.updateCell(rowNum, colNum, content);
             parentDemo.requestOutputTable();
-            // requestOutputTable(parentDemo);
         });
     })
 }
@@ -65,33 +75,33 @@ function inputTableListener(containerDiv) {
 inputTableEventListeners.push(inputTableListener);
 
 // add row to input table
-function addInputRowListener(containerDiv) {
+function addInputRowListener(containerDiv, targetClass) {
     // console.log('addInputRowListener');
-    $(containerDiv).find('.add-input-row-button').click(function(){
+    $(containerDiv).find(targetClass).find('.add-input-row-button').click(function(){
+        // console.log('hmmm')
+        // console.log(this)
+        // console.log(targetClass)
         var parentModel = getParentDemoModel(this);
-        var parentView = getParentView(this);
-        console.log(this);
-        parentModel.addInputRow();
-        parentView.focusLastRow();
+        parentModel.addInputRow(targetClass);
     })
 }
 
 inputTableEventListeners.push(addInputRowListener);
 
-function deleteInputRowListener(containerDiv) {
+function deleteInputRowListener(containerDiv, targetClass) {
     // console.log('deleteInputRowListener')
-    $(containerDiv).find('.del-input-row-button').click(function(){
+    $(containerDiv).find(targetClass).find('.del-input-row-button').click(function(){
         var rowNum = $(this).closest('tr').data('rownum');
         // var rowNum = $(e.target.parentElement).data('rownum');
-        getParentDemoModel(this).deleteInputRow(rowNum);
+        getParentDemoModel(this).deleteInputRow(rowNum, targetClass);
     })
 }
 // eventListeners.push(deleteInputRowListener);
 inputTableEventListeners.push(deleteInputRowListener);
 
-function tableEditListener(containerDiv) {
+function tableEditListener(containerDiv, targetClass) {
     // console.log('tableEditListener');
-    $(containerDiv).find('.editable').on('keypress', function(e) {
+    $(containerDiv).find(targetClass).find('.editable').on('keypress', function(e) {
         // if user presses enter when editing
         if (e.which == 13) {
             // clear any text selection/highlight
@@ -213,10 +223,10 @@ function callEventListeners(containerDiv) {
     }
 }
 
-function updateInputTableEventListeners(containerDiv) {
+function updateInputTableEventListeners(containerDiv, targetClass='.input_table') {
     // console.log('updateInputTableEventListeners');
     for (i=0; i<inputTableEventListeners.length; i++) {
-        inputTableEventListeners[i](containerDiv);
+        inputTableEventListeners[i](containerDiv, targetClass);
     }
 }
 

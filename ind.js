@@ -36,13 +36,15 @@ $(document).ready(function() {
 });
 
 function getParentDemoModel(elem) {
-    // console.log(elem);
+    console.log('getParentDemoModel for:');
+    console.log(elem);
+    console.log($(elem).parents('div.in_d'));
     return demos[$(elem).parents('div.in_d').data('uid')];
 }
 
 function getParentView(elem) {
-    console.log('getParentView for:')
-    console.log(elem)
+    console.log('getParentView for:');
+    console.log(elem);
     return demos[$(elem).parents('div.in_d').data('uid')].view;
 }
 // used by events to access the parent demo object for a given DOM element

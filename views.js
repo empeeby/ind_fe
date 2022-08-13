@@ -33,12 +33,12 @@ class BaseView {
                 .html(this.model.title);
     }
 
-    updateInputTable() {
+    updateInputTable(targetClass='.input_table', targetTable=this.model.inputTable) {
         $(this.containerDiv)
-            .find('.input_table')
-                .html(tableToHTML(this.model.inputTable, this.model.userEditableColumns, this.model.intColumns));
+            .find(targetClass)
+                .html(tableToHTML(targetTable, this.model.userEditableColumns, this.model.intColumns));
 
-        updateInputTableEventListeners(this.containerDiv);
+        updateInputTableEventListeners(this.containerDiv, targetClass);
     }
 
     updateOutputTable() {
@@ -55,9 +55,9 @@ class BaseView {
         // hljs.highlightElement(exampleCodeBlock[0])
     }
     
-    focusLastRow() {
+    focusLastRow(targetClass='.input_table') {
         $(this.containerDiv)
-            .find('.input_table')
+            .find(targetClass)
                 .find('td.editable').last().focus();
     }
 
@@ -212,21 +212,35 @@ class PtTransformerOperatorsView extends BaseView {
 
     updateArg2(){
         // update the table and (or?) number input
-        $(this.containerDiv)
-            .find('.input_table_b')
-                .html(tableToHTML(this.model.arg_2_table, this.model.userEditableColumns, this.model.intColumns));
-
-        $(this.containerDiv)
-            .find('.arg_2_number')
-                .html(buildNumberField(3,'number'))
+        
+        
 
         // toggle visibility so that only the right one is shown
         if (this.model.arg_2_type == 'table') {
             console.log('arg2:table')
+            this.updateInputTable('.input_table_b', this.model.arg_2_table);
+
             $(this.containerDiv).find('.table_b_wrap').show();
             $(this.containerDiv).find('.arg_2_number_wrap').hide();
+
         } else if (this.model.arg_2_type == 'int' || this.model.arg_2_type == 'float') {
             console.log('arg2:number')
+            if (this.model.arg_2_type == 'int') {
+                var displaytext = 'integer';
+                var min = 0;
+                var max = null;
+                var step = 1;
+            } else if (this.model.arg_2_type == 'float') {
+                var displaytext = 'float';
+                var min = null;
+                var max = null;
+                var step = 0.01;
+            }
+            $(this.containerDiv)
+                .find('.arg_2_number')
+                    .html(buildNumberField(this.model.arg_2_number,'arg_2_number',displaytext,min,max,step))
+            if (this.viewInitialised) initNumberInput(this.containerDiv);
+
             $(this.containerDiv).find('.table_b_wrap').hide();
             $(this.containerDiv).find('.arg_2_number_wrap').show();
         }

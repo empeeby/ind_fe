@@ -137,7 +137,7 @@ var templates ={
         </div>
         
         <div class="op-arg-2-wrap">
-            <div class="table-wrap table_b_wrap">
+            <div class="table_b_wrap">
                 <h3 class="subtitle">input table b</h3>
                 <table class="input_table_b"></table>
                 <p class="input_warning_b"></p>

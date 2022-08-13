@@ -28,21 +28,33 @@ class BaseModel {
         this.uid = 'in_d_' + BaseModel.idCounter++;
         this.timeout = -1;
     }
+    
+    getTargetTable(targetClass) {
+        switch (targetClass) {
+            case ('.input_table'):
+                return this.inputTable;
+            case ('.input_table_b'):
+                return this.arg_2_table;
+        }
+    }
 
-    addInputRow() {
+    addInputRow(targetClass='.input_table') {
+        var targetTable = this.getTargetTable(targetClass);
         // push a new row with a unique qid
-        this.inputTable.pushRow(this.getNewInputRow());
-        console.log(this.inputTable.data);
+        targetTable.pushRow(this.getNewInputRow());
+        console.log(targetTable.data);
         // update the input table view
-        this.view.updateInputTable();
+        this.view.updateInputTable(targetClass, targetTable);
+        this.view.focusLastRow(targetClass);
         // get recalculated output table
         this.requestOutputTable();
     }
 
-    deleteInputRow(index) {
-        this.inputTable.removeRow(index);
-        console.log(this.inputTable.data);
-        this.view.updateInputTable();
+    deleteInputRow(index, targetClass='.input_row') {
+        var targetTable = this.getTargetTable(targetClass);
+        targetTable.removeRow(index);
+        console.log(targetTable.data);
+        this.view.updateInputTable(targetClass, targetTable);
         // get recalculated output table
         this.requestOutputTable();
     }
@@ -523,6 +535,15 @@ class PtTransformerOperators extends BaseModel {
                 } else {
                     return false;
                 }
+            case 'arg_2_table':
+                this.arg_2_table = new Table(newval.columns, newval.data);
+                if (newval.editable !== 'undefined') {
+                    this.userEditableColumns = newval.editable;
+                }
+                if (newval.new_row !== 'undefined') {
+                    this.defaultNewRow = newval.new_row;
+                }
+                return true;
         }
 
         super.set(attribute, newval);

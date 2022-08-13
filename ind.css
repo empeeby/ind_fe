@@ -51,9 +51,11 @@
   padding:1em;
  /*   flex-shrink: 2; */
  }
- .params-wrap,
- .table-wrap,
-.example-code-wrap, .operator_display_wrap{
+.params-wrap,
+.table-wrap,
+.example-code-wrap,
+.operator_display_wrap,
+.op-arg-2-wrap{
   display:flex;
   flex-direction:column;
   align-items:center;
