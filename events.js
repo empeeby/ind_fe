@@ -228,7 +228,7 @@ function initPresetSelect(containerDiv) {
         callEventListeners(containerDiv);
     })
 }
-eventListeners.push(initPresetSelect)
+// eventListeners.push(initPresetSelect)
 
 // *******************************************************************************
 // user callable functions below, each calls a related group

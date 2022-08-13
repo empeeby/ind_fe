@@ -12,6 +12,7 @@ class BaseView {
         this.updatePresets();
         this.viewInitialised = true;
         callEventListeners(containerDiv);
+        initPresetSelect(containerDiv);
     }
 
     // /////////////////////////////
@@ -240,7 +241,7 @@ class PtTransformerOperatorsView extends BaseView {
             $(this.containerDiv)
                 .find('.arg_2_number')
                     .html(buildNumberField(this.model.arg_2_number,'arg_2_number',displaytext,min,max,step))
-            if (this.viewInitialised) initNumberInput(this.containerDiv);
+            // if (this.viewInitialised) initNumberInput(this.containerDiv);
 
             $(this.containerDiv).find('.table_b_wrap').hide();
             $(this.containerDiv).find('.arg_2_number_wrap').show();
