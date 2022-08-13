@@ -168,20 +168,20 @@ function tableToHTML(table, editableFields=[], intFields=[]) {
     var outstring = "";
     // convert editableFields/intFields (strings) into col numbers
     var editableColumns = [];
-    var intColumns = []
+    var intColumns = [];
+    var softNumColumns = [];
     for (i = 0; i < table.columns.length; i++) {
         var colName = table.columns[i];
         if (editableFields.includes(colName)) editableColumns.push(i);
         if (intFields.includes(colName) || FORCE_INT_INPUT.includes(colName)) intColumns.push(i);
+        if (SOFT_CONVERT_TO_NUMBER.includes(colName)) softNumColumns.push(i);
     }
     
     // console.log(editableColumns);
     outstring += buildTableHeader(table.columns);
-    outstring += buildTableRows(table.data, editableColumns, intColumns);
+    outstring += buildTableRows(table.data, editableColumns, intColumns, softNumColumns);
     if (editableFields.length > 0) {
-        console.log('ADDING BUTTON')
         outstring += `<tr><td><button class="add-input-row-button">add row</button></td></tr>`
-        outstring += '<!-- GHOSTLY COMMENT -->'
     }
     return outstring;
 }
@@ -204,7 +204,7 @@ function buildTableHeader(in_array) {
 //     return outstring;
 // }
 
-function buildTableRows(in_rows, editableColumns, intColumns=[]) {
+function buildTableRows(in_rows, editableColumns, intColumns=[], softNumColumns=[]) {
     var outstring = '';
     for (row = 0; row < in_rows.length; row++) {
         outstring += '<tr data-rownum=' + row + '>';
@@ -214,6 +214,9 @@ function buildTableRows(in_rows, editableColumns, intColumns=[]) {
                 outstring += ' contenteditable="true" class="editable';
                 if (intColumns.includes(col)) {
                     outstring += ' forceinteger';
+                }
+                if (softNumColumns.includes(col)) {
+                    outstring += ' softnumberconvert';
                 }
                 outstring += '"';
             }

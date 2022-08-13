@@ -27,6 +27,17 @@ function inputTableListener(containerDiv, targetClass) {
             var rowNum = $(e.target.parentElement).data('rownum');
             var colNum = $(e.target).data('colnum');
             var content = e.target.firstChild.textContent;
+
+            console.log('ORIGINAL CONTENT');
+            console.log(content);
+            console.log(typeof content)
+
+            // soft type convert to float or int
+            // if the value is a string, but contains only numerical chars
+            // parse it to a number (int if it appears so, float otherwise)
+            if($(this).hasClass('softnumberconvert')) {
+                content = softNumberConvert(content);
+            }
             
             // type forcing here, all content is originally in string form
             if ($(this).hasClass("forceinteger")) {
@@ -53,6 +64,10 @@ function inputTableListener(containerDiv, targetClass) {
                 
             }
 
+            console.log('STORED CONTENT');
+            console.log(content);
+            console.log(typeof content)
+
             var parentDemo = getParentDemoModel(this);
             var parentTable;
 
@@ -64,7 +79,8 @@ function inputTableListener(containerDiv, targetClass) {
                     parentTable = parentDemo.arg_2_table;
                     break;
             }
-
+            
+            // update the table data model & request ui update
             parentTable.updateCell(rowNum, colNum, content);
             parentDemo.requestOutputTable();
         });
