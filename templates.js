@@ -127,7 +127,7 @@ var templates ={
     <div class="preset"></div>
     <div class="operator_display_wrap">
             <h3 class="subtitle">operator</h3>
-            <p class="operator_display"><p>
+            <code class="operator_display"></code>
     </div>
     <div class="demo-content">
         <div class="table-wrap">
@@ -154,6 +154,7 @@ var templates ={
         </div>
         <div class="example-code-wrap">
             <h3>example code</h3>
+            <button onclick="copyText(event)">copy code</button>
             <pre><code class="example-code language-python">...</code></pre>
         </div>
     </div>

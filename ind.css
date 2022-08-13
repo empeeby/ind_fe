@@ -1,7 +1,7 @@
 :root {
   --mainbackground:#eee;
-  --subbackground:#ccc;
-  --lightaccent:#ddd;
+  --subbackground:#ddd;
+  --lightaccent:#ccc;
   --darkaccent:#aaa;
   --text:#333;
  }
@@ -69,6 +69,11 @@
  }
 .operator_display {
   font-size: 3em;
+  background-color: var(--darkaccent);
+  border: solid 1px;
+  border-radius: .3em;
+  padding: 0.2em;
+  /* height: 1em; */
 }
  .params {
   display:flex;

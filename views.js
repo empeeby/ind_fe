@@ -48,6 +48,8 @@ class BaseView {
 
         var exampleCodeBlock = $(this.containerDiv).find('.example-code');
         exampleCodeBlock.html(this.model.codeExample);
+        // exampleCodeBlock.html(Prism.highlight(this.model.codeExample, Prism.languages.python, 'python'));
+        Prism.highlightElement(exampleCodeBlock[0]);
 
         // var containerDivElement = this.containerDiv[0];
         // hljs.highlightElement(document.querySelector('pre code'))
@@ -185,7 +187,6 @@ class PtSdmView extends BaseView {
     updateView(){
         this.updateTitle();
         this.updateInputTable();
-        this.updateOperator();
         this.model.requestOutputTable(); 
     }
 }
@@ -206,7 +207,7 @@ class PtTransformerOperatorsView extends BaseView {
 
     updateOperator(){
         $(this.containerDiv)
-            .find('.operator_display')
+            .find('code.operator_display')
                 .html(this.model.selectedOperator)
     }
 
