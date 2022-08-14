@@ -44,11 +44,11 @@ var templates ={
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
         </div>
-        <div class="example-code-wrap">
-            <h3>example code</h3>
-            <button onclick="copyText(event)">copy code</button>
-            <pre><code class="example-code language-python">...</code></pre>
-        </div>
+    </div>
+    <div class="example-code-wrap">
+        <h3>example code</h3>
+        <button onclick="copyText(event)">copy code</button>
+        <pre><code class="example-code language-python">...</code></pre>
     </div>
     `,
     
@@ -96,11 +96,11 @@ var templates ={
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
         </div>
-        <div class="example-code-wrap">
-            <h3>example code</h3>
-            <button onclick="copyText(event)">copy code</button>
-            <pre><code class="example-code language-python">...</code></pre>
-        </div>
+    </div>
+    <div class="example-code-wrap">
+        <h3>example code</h3>
+        <button onclick="copyText(event)">copy code</button>
+        <pre><code class="example-code language-python">...</code></pre>
     </div>
     `,
 
@@ -117,11 +117,11 @@ var templates ={
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
         </div>
-        <div class="example-code-wrap">
-            <h3>example code</h3>
-            <button onclick="copyText(event)">copy code</button>
-            <pre><code class="example-code language-python">...</code></pre>
-        </div>
+    </div>
+    <div class="example-code-wrap">
+        <h3>example code</h3>
+        <button onclick="copyText(event)">copy code</button>
+        <pre><code class="example-code language-python">...</code></pre>
     </div>
     `,
 
@@ -155,11 +155,11 @@ var templates ={
             <h3 class="subtitle">output table</h3>
             <table class="output_table"></table>
         </div>
-        <div class="example-code-wrap">
-            <h3>example code</h3>
-            <button onclick="copyText(event)">copy code</button>
-            <pre><code class="example-code language-python">...</code></pre>
-        </div>
+    </div>
+    <div class="example-code-wrap">
+        <h3>example code</h3>
+        <button onclick="copyText(event)">copy code</button>
+        <pre><code class="example-code language-python">...</code></pre>
     </div>
     `
 } 

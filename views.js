@@ -213,20 +213,18 @@ class PtTransformerOperatorsView extends BaseView {
     }
 
     updateArg2(){
-        // update the table and (or?) number input
+        // update the table / number input
+    
         
-        
-
-        // toggle visibility so that only the right one is shown
         if (this.model.arg_2_type == 'table') {
-            console.log('arg2:table')
+            // update the second input table
             this.updateInputTable('.input_table_b', this.model.arg_2_table);
-
+            // toggle visibility so that only the table is shown
             $(this.containerDiv).find('.table_b_wrap').show();
             $(this.containerDiv).find('.arg_2_number_wrap').hide();
 
         } else if (this.model.arg_2_type == 'int' || this.model.arg_2_type == 'float') {
-            console.log('arg2:number')
+            // set the number input appropriately for the number type expected by this operator
             if (this.model.arg_2_type == 'int') {
                 var displaytext = 'integer';
                 var min = 0;
@@ -238,11 +236,11 @@ class PtTransformerOperatorsView extends BaseView {
                 var max = null;
                 var step = 0.01;
             }
+            // build the new number box
             $(this.containerDiv)
                 .find('.arg_2_number')
                     .html(buildNumberField(this.model.arg_2_number,'arg_2_number',displaytext,min,max,step))
-            // if (this.viewInitialised) initNumberInput(this.containerDiv);
-
+            // toggle visibility so that only the number is shown
             $(this.containerDiv).find('.table_b_wrap').hide();
             $(this.containerDiv).find('.arg_2_number_wrap').show();
         }
