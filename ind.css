@@ -18,8 +18,8 @@
   align-items:center;
   border:1px solid;
   border-radius:.3em;
-  font-size: 70%;
-   max-width: 66%;
+  font-size: 90%;
+   max-width: 90%;
    margin-left: auto;
    margin-right: auto;
  }
@@ -178,6 +178,7 @@
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+  font-size: 75%;
 }
 
 .in_d table button {
