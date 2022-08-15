@@ -37,7 +37,11 @@
    padding-bottom: 0;
  }
  .in_d .input_warning {
-  color: red;
+  color:red;
+   font-size: 1em;
+   line-height: 105%;
+   padding-top: 0.5em;
+   padding-bottom: 0;
  }
  .in_d h3, .in_d h4 {
  /*   padding: 0.4em; */
@@ -67,14 +71,13 @@
   max-width: 100%;
    padding: 10px;
  }
-.operator_display {
-  font-size: 3em;
-  background-color: var(--darkaccent);
-  border: solid 1px;
-  border-radius: .3em;
-  padding: 0.2em;
-  /* height: 1em; */
-}
+ .in_d .operator_display_wrap code {
+  font-size:2.5em;
+  background-color:var(--darkaccent);
+  border:solid 1px;
+  border-radius:.3em;
+  padding:.2em
+ }
  .params {
   display:flex;
   flex-wrap:wrap;
@@ -177,6 +180,10 @@
   word-wrap: break-word;
 }
 
+.in_d table button {
+  padding: 0;
+}
+
 @media screen and (max-width: 1000px) {
   .in_d{
     max-width: 80%;
@@ -221,3 +228,7 @@
    }
  } 
  
+ /* ReadTheDocs-specific adjustment to match the pyterrier rtd project appearance */
+ .wy-nav-content {
+  max-width: 1200px !important;
+}
