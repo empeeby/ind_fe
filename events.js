@@ -255,10 +255,9 @@ function updateVariantSelectEventListeners(containerDiv) {
 function copyText(e) {
     var parentModel = getParentDemoModel(e.target);
     navigator.clipboard.writeText(parentModel.codeExample);
-    var originalText = e.target.textContent;
     e.target.textContent = 'code copied';
     function resetTextContent(elem, text) {
         elem.textContent = text;
     }
-    setTimeout(resetTextContent, 1500, e.target, originalText)
+    setTimeout(resetTextContent, 1500, e.target, 'copy code')
 }
