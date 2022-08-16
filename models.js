@@ -504,7 +504,7 @@ class PtTransformerOperators extends BaseModel {
                 this.initPreset(data.presets);
 
                 if ($(containerDiv).data('title')) {
-                    this.title = $(containerDiv.data('title'));
+                    this.title = $(containerDiv).data('title');
                 }
 
                 this.view = new PtTransformerOperatorsView(containerDiv, this);
