@@ -506,7 +506,6 @@ class PtTransformerOperators extends BaseModel {
                 if ($(containerDiv).data('title')) {
                     this.title = $(containerDiv).data('title');
                 }
-
                 this.view = new PtTransformerOperatorsView(containerDiv, this);
                 this.loaded=true;
             },
@@ -515,7 +514,13 @@ class PtTransformerOperators extends BaseModel {
     }
 
     buildUrl(){
-        var outstring = `${API_BASE_URL}${this.slug}${this.selectedOperator}/`
+        var url_op
+        if (this.selectedOperator == '%') {
+            url_op = '%25';
+        } else {
+            url_op = this.selectedOperator;
+        }
+        var outstring = `${API_BASE_URL}${this.slug}${url_op}/`
         
         if (this.arg_2_type == 'float' || this.arg_2_type == 'int') {
             outstring += `?numerical_arg=${this.arg_2_number}`;
