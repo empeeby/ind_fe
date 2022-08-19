@@ -40,7 +40,7 @@ function postjson(url, data, success, context) {
     request.done(success);
 
     request.fail(function(msg) {
-        alert( "Request failed: " + JSON.stringify(msg) );
+        // alert( "Request failed: " + JSON.stringify(msg) );
       });
 
 }
