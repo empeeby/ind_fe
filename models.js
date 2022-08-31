@@ -300,7 +300,7 @@ class PtRetrieval extends BaseModel {
 
     slug = 'pyterrier/retrieval/';
     title = 'pyterrier retrieval demo';
-    intColumns = []; // also probs set from server
+    intColumns = []; 
     template = templates.ptRetrieval;
     limit=0;
 
@@ -349,19 +349,9 @@ class PtQueryExpansion extends BaseModel {
     title = 'pyterrier query expansion demo';
     template = templates.ptQueryExpansion;
     userEditableColumns = ['query','qid','docno', 'docid', 'rank','score'];
-    intColumns = ['docid']; // also probs set from server
-    // inputTable;
-    // outputTable;
-    // transformModels;
-    // selectedTransformModel;
     qeParams;
     selectedQeParams;
     selectedParamProps;
-    // datasets;
-    // selectedDataset;
-    // variants;
-    // selectedVariant;
-    // indexes;
 
     constructor(containerDiv) {
         super();
@@ -442,8 +432,6 @@ class PtSdm extends BaseModel {
     template = templates.ptSdm;
     userEditableColumns = ['query'];
     intColumns = [];
-    // inputTable;
-    // outputTable;
 
     defaultNewQuery = '';
 
@@ -490,7 +478,7 @@ class PtTransformerOperators extends BaseModel {
     arg_2_type;
     // these might need defaults setting in case they are switched to without a preset (if we make that possible)
     arg_2_table = new Table();
-    arg_2_number = 666;
+    arg_2_number = 123;
 
     constructor(containerDiv) {
         super();

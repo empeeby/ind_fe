@@ -28,10 +28,6 @@ function inputTableListener(containerDiv, targetClass) {
             var colNum = $(e.target).data('colnum');
             var content = e.target.firstChild.textContent;
 
-            console.log('ORIGINAL CONTENT');
-            console.log(content);
-            console.log(typeof content)
-
             // soft type convert to float or int
             // if the value is a string, but contains only numerical chars
             // parse it to a number (int if it appears so, float otherwise)
@@ -63,10 +59,6 @@ function inputTableListener(containerDiv, targetClass) {
                 }
                 
             }
-
-            console.log('STORED CONTENT');
-            console.log(content);
-            console.log(typeof content)
 
             var parentDemo = getParentDemoModel(this);
             var parentTable;
