@@ -1,3 +1,5 @@
+// This is the 'main' from which demos are initialised
+
 // for storing each demo-div and its associated demo-object as key/value pairs
 var demos = {};
 
@@ -31,9 +33,9 @@ $(document).ready(function() {
         
     });
 
-    // callEventListeners();
-    // IN_D_INITIALISED = true;
 });
+
+// utility functions for accessing the data model/view to which a given DOM element belongs
 
 function getParentDemoModel(elem) {
     console.log('getParentDemoModel for:');
@@ -47,8 +49,3 @@ function getParentView(elem) {
     console.log(elem);
     return demos[$(elem).parents('div.in_d').data('uid')].view;
 }
-// used by events to access the parent demo object for a given DOM element
-
-// for (var listener in eventListeners) {
-//     listener.call();
-// }

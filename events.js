@@ -11,7 +11,6 @@ var variantSelectEventListeners = []
 function submitListener(containerDiv) {
     $(containerDiv).find('.submit-button').click(function(){
         getParentDemoModel(this).requestOutputTable();
-        // requestOutputTable(getParentDemoModel(this));
     });
 }
 
@@ -20,7 +19,6 @@ eventListeners.push(submitListener);
 // input table updates
 function inputTableListener(containerDiv, targetClass) {
     // listen for edits to input table data
-    // console.log('inputTableListener');
     $(containerDiv).find(targetClass).find('td.editable').each(function(){
         $(this).bind('input', function(e){
             
@@ -79,16 +77,11 @@ function inputTableListener(containerDiv, targetClass) {
     })
 }
 
-// eventListeners.push(inputTableListener);
 inputTableEventListeners.push(inputTableListener);
 
 // add row to input table
 function addInputRowListener(containerDiv, targetClass) {
-    // console.log('addInputRowListener');
     $(containerDiv).find(targetClass).find('.add-input-row-button').click(function(){
-        // console.log('hmmm')
-        // console.log(this)
-        // console.log(targetClass)
         var parentModel = getParentDemoModel(this);
         parentModel.addInputRow(targetClass);
     })
@@ -97,18 +90,14 @@ function addInputRowListener(containerDiv, targetClass) {
 inputTableEventListeners.push(addInputRowListener);
 
 function deleteInputRowListener(containerDiv, targetClass) {
-    // console.log('deleteInputRowListener')
     $(containerDiv).find(targetClass).find('.del-input-row-button').click(function(){
         var rowNum = $(this).closest('tr').data('rownum');
-        // var rowNum = $(e.target.parentElement).data('rownum');
         getParentDemoModel(this).deleteInputRow(rowNum, targetClass);
     })
 }
-// eventListeners.push(deleteInputRowListener);
 inputTableEventListeners.push(deleteInputRowListener);
 
 function tableEditListener(containerDiv, targetClass) {
-    // console.log('tableEditListener');
     $(containerDiv).find(targetClass).find('.editable').on('keypress', function(e) {
         // if user presses enter when editing
         if (e.which == 13) {
@@ -126,19 +115,15 @@ function tableEditListener(containerDiv, targetClass) {
         }
     })
 }
-// eventListeners.push(tableEditListener);
 inputTableEventListeners.push(tableEditListener);
 
 
 function initDatasetSelect(containerDiv) {
     $(containerDiv).find( "[name='dataset']").on('change', function(e){
         parentModel = getParentDemoModel(this);
-        // console.log('radio change');
-        // console.log(e.target.id)
         parentModel.selectedDataset = e.target.id;
         parentModel.updateVariants();
         parentModel.requestOutputTable();
-        // requestOutputTable(parentModel);
     });
 }
 eventListeners.push(initDatasetSelect);
@@ -149,7 +134,6 @@ function initVariantSelect(containerDiv) {
         console.log(e.target.id)
         getParentDemoModel(this).selectedVariant = e.target.id;
         getParentDemoModel(this).requestOutputTable();
-        // requestOutputTable(getParentDemoModel(this));
     });
 }
 variantSelectEventListeners.push(initVariantSelect);
@@ -160,10 +144,8 @@ function initTransformModelSelect(containerDiv) {
         console.log(e.target.value);
         getParentDemoModel(this).updateTransformModel(e.target.value);
         getParentDemoModel(this).requestOutputTable();
-        // requestOutputTable(getParentDemoModel(this));
     })
 }
-// eventListeners.push(initWModelSelect);
 eventListeners.push(initTransformModelSelect);
 
 function initNumberInput(containerDiv) {
@@ -220,7 +202,6 @@ function initPresetSelect(containerDiv) {
         callEventListeners(containerDiv);
     })
 }
-// eventListeners.push(initPresetSelect)
 
 // *******************************************************************************
 // user callable functions below, each calls a related group

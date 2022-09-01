@@ -1,3 +1,5 @@
+// data models for all demo types defined in here
+
 // used as an abstract class for all demos
 class BaseModel {
 
@@ -60,7 +62,6 @@ class BaseModel {
     }
 
     set(attribute, newval) {
-
         // special cases in switch
         switch (attribute) {
             case 'inputTable':
@@ -87,7 +88,6 @@ class BaseModel {
         // checks if an attribute already exists, then sets it if so
         if (typeof this[attribute] !== 'undefined') {
             this[attribute] = newval;
-            // console.log(attribute.toUpperCase() +  this[attribute])
             return true;
         }
         return false;
@@ -120,10 +120,10 @@ class BaseModel {
 
     requestOutputTable(data=this.inputTable) {
         // debouncing wrapper to limit calls to the server to once every DEBOUNCE_TIMEOUT milliseconds
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data);
+        clearTimeout(this.timeout); // clear any pending request
+        this.timeout = setTimeout(this.debouncedRequestOutputTable.bind(this), DEBOUNCE_TIMEOUT, data); // create a new request to fire after DEBOUNCE_TIMEOUT ms.
         
-        // helpful warning to user in common cases that pt throws an error
+        // display a helpful warning to user in common cases that pt throws an error
         if (data.columns != undefined && data.data != undefined) {
             this.updateInputTableWarning(data);
         } else if (data.input_table_a != undefined && data.input_table_b != undefined) {
@@ -134,7 +134,6 @@ class BaseModel {
     }
 
     debouncedRequestOutputTable(data=this.inputTable) {
-        // this.timeout = -1; //reset the debounce timeout
         console.log('POST request to: '+this.buildUrl());
         postjson(
             this.buildUrl(),
@@ -264,7 +263,6 @@ class BaseModel {
             if (index == 0) {
                 // if there are no presets
                 console.log('ERROR: no presets found!');
-                // TODO load some default instead
                 return;
             }
             console.log('CAUTION: preset index out of range, loading preset index 0 instead');
@@ -398,9 +396,7 @@ class PtQueryExpansion extends BaseModel {
     
     updateQeParams() {
         this.selectedQeParams = Object.keys(this.qeParams[this.selectedTransformModel]);
-        // this.selectedParamProps = 
         console.log('qe model: ' + this.selectedTransformModel + '; params: ' + this.selectedQeParams);
-        // update view? or is that done from the event?
         if (this.loaded) this.view.updateQeParamsView();
     }
     
@@ -442,8 +438,6 @@ class PtSdm extends BaseModel {
             API_BASE_URL+'pyterrier/sdm/get-params/',
             function(data) {
                 this.initPreset(data.presets);
-                // this.inputTable = new Table(data.default_input_table.columns, data.default_input_table.data);
-                // this.outputTable = new Table();
 
                 // check for params set by code user in the html data attributes
                 if ($(containerDiv).data('title')) {
@@ -451,7 +445,6 @@ class PtSdm extends BaseModel {
                 }
 
                 this.view = new PtSdmView(containerDiv, this);
-                // callEventListeners(containerDiv);
                 this.loaded = true;
             },
             this
@@ -476,7 +469,6 @@ class PtTransformerOperators extends BaseModel {
     selectedOperator;
     operatorInfo;
     arg_2_type;
-    // these might need defaults setting in case they are switched to without a preset (if we make that possible)
     arg_2_table = new Table();
     arg_2_number = 123;
 

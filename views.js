@@ -25,7 +25,6 @@ class BaseView {
 
     drawTemplate() {
         $(this.containerDiv).html(this.model.template);
-        // $(this.containerDiv).append(this.model.template);
     }
 
     updateTitle() {
@@ -49,13 +48,7 @@ class BaseView {
 
         var exampleCodeBlock = $(this.containerDiv).find('.example-code');
         exampleCodeBlock.html(this.model.codeExample);
-        // exampleCodeBlock.html(Prism.highlight(this.model.codeExample, Prism.languages.python, 'python'));
         Prism.highlightElement(exampleCodeBlock[0]);
-
-        // var containerDivElement = this.containerDiv[0];
-        // hljs.highlightElement(document.querySelector('pre code'))
-        // hljs.highlightElement(containerDivElement.querySelector('pre code'))
-        // hljs.highlightElement(exampleCodeBlock[0])
     }
     
     focusLastRow(targetClass='.input_table') {
@@ -67,9 +60,7 @@ class BaseView {
     updateDatasets(){
         $(this.containerDiv)
             .find('.dataset')
-                .html(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
-                // .append(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));        
-
+                .html(buildRadioButtons(this.model.datasets, 'dataset', this.model.selectedDataset));      
     }
 
     updateVariants(){
@@ -98,8 +89,6 @@ class BaseView {
 
 class PtRetrievalView extends BaseView {
 
-    // template = templates.ptRetrieval;
-
     constructor(containerDiv, model) {
         super(containerDiv, model);
     }
@@ -110,19 +99,15 @@ class PtRetrievalView extends BaseView {
         this.updateInputTable();
         this.updateDatasets();
         this.updateVariants();
-        // if (!this.viewInitialised) this.updatePresets();
         
         $(this.containerDiv)
         .find('.transformmodel')
-        .html(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'weighting model'));        
-        // .append(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'weighting model'));        
+        .html(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'weighting model'));       
         
         $(this.containerDiv)
         .find('.limit')
         .html(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):'))
-        // .append(buildNumberField(this.model.limit, 'limit', 'Limit number of results per query (0 indicates no limit):'))
             
-        // requestOutputTable(this.model);        
         this.model.requestOutputTable();        
     }
    
@@ -135,8 +120,6 @@ class PtQueryExpansionView extends BaseView {
     }
 
     updateView() {
-        // qemodel (select)
-
         this.updateTitle();
         this.updateInputTable();
         this.updateDatasets();
@@ -146,9 +129,7 @@ class PtQueryExpansionView extends BaseView {
         $(this.containerDiv)
         .find('.transformmodel')
         .html(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'QE model')); 
-        // .append(buildSelect(this.model.transformModels,'transformmodel', this.model.selectedTransformModel, 'QE model')); 
 
-        // requestOutputTable(this.model);
         this.model.requestOutputTable(); 
     }
 
@@ -163,12 +144,9 @@ class PtQueryExpansionView extends BaseView {
 
     getAllQeParams() {
         var outstring = '';
-        // console.log('selected qe params ' + this.model.uid)
         for (i in this.model.selectedQeParams) {
             var thisParam = this.model.selectedQeParams[i];
-            // console.log(thisParam);
             var thisParamProps = this.model.qeParams[this.model.selectedTransformModel][thisParam];
-            // console.log(thisParamProps)
             var value = thisParamProps['value']
             var min = thisParamProps['min']
             var max = thisParamProps['max']

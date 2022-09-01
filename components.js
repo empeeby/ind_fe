@@ -5,9 +5,7 @@ class Table {
     }
 
     updateCell(rowIndex, colIndex, value) {
-        // maybe check input is within bounds...
         this.data[rowIndex][colIndex] = value;
-        // console.log(this);
     }
 
     pushRow(newRow) {
@@ -40,6 +38,7 @@ function postjson(url, data, success, context) {
     request.done(success);
 
     request.fail(function(msg) {
+        // alert can be enabled during development to return server errors
         // alert( "Request failed: " + JSON.stringify(msg) );
       });
 
@@ -56,6 +55,7 @@ function getdata(url,success,context) {
     request.done(success);
 
     request.fail(function(msg) {
+        // alert can be enabled during development to return server errors
         // alert( "Request failed: " + JSON.stringify(msg) );
     })
 }
@@ -70,6 +70,7 @@ function softNumberConvert(value) {
     // - the first character if == '-'
     // - all trailing zeros at the beginning or end
     // - the last character if '.'
+    
     var trimmedValue = value.replace(/^-/, '').replace(/^0+/, '').replace(/0+$/, '').replace(/\.$/, '');
     if (parsedValue > -1 && parsedValue < 1) {
         // if the value is less than 1 and more than -1, replace 1 zero at the start
